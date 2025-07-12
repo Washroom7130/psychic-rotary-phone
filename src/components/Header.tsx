@@ -23,7 +23,7 @@ export default function Header() {
     let accountLink = '/login'; // default to login if not logged in
     if (user) {
         if (user.vaiTro === 'KhachHang') accountLink = '/account';
-        else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') accountLink = '/dashboard';
+        else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') accountLink = '/admin';
     }
 
     const handleLogout = async () => {

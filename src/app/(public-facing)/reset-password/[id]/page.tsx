@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '@/public/css/style.css';
@@ -19,6 +19,45 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [tokenError, setTokenError] = useState('');
+
+  // redirect user if password has been reset successfully
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        router.push('/login');
+      }, 2500); // 2.5 seconds delay before redirect
+
+      return () => clearTimeout(timer); // cleanup
+    }
+  }, [message, router]);
+
+  // Check token on load
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const res = await fetch(`http://localhost:5555/api/auth/reset_password/${id}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          setTokenValid(true);
+        } else {
+          const data = await res.json();
+          setTokenError(data.error || 'Liên kết không hợp lệ hoặc đã hết hạn.');
+          setTokenValid(false);
+        }
+      } catch (err) {
+        setTokenError('Lỗi kết nối đến máy chủ.');
+        setTokenValid(false);
+      }
+    };
+
+    checkToken();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +93,29 @@ export default function ResetPasswordPage() {
       setLoading(false);
     }
   };
+
+  // --- Render Logic ---
+  if (tokenValid === false) {
+    return (
+      <main>
+        <div className="container">
+          <h1 style={{ color: 'red', textAlign: 'center' }}>{tokenError}</h1>
+        </div>
+      </main>
+    );
+  }
+
+  if (tokenValid === null) {
+    return (
+      <main>
+        <div className="container">
+          <h2 style={{ textAlign: 'center' }}>Đang kiểm tra liên kết...</h2>
+        </div>
+      </main>
+    );
+  }
+
+  // Show form is token is valid
 
   return (
     <main>
