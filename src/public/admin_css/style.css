@@ -273,3 +273,40 @@ body, html {
 .fade-out {
   animation: fadeOut 0.3s ease-out forwards;
 }
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+}
+
+.badge-processing {
+  background-color: #ffc107;
+}
+
+.badge-cancelled {
+  background-color: #dc3545;
+}
+
+.badge-success {
+  background-color: #28a745;
+}
+
+.badge-checkedin {
+  background-color: #17a2b8;
+}
+
+.badge-default {
+  background-color: #6c757d;
+}
+
+.detail-info p {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.detail-info strong {
+  color: #333;
+}
