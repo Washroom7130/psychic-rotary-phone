@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import '@/public/admin_css/style.css';
+import '@/public/admin_css/dangky.css';
 import Modal from '@/components/Modal';
 import DOMPurify from 'dompurify';
 
@@ -26,17 +27,29 @@ export default function DangKyPage() {
   const [detailError, setDetailError] = useState('');
   const [sortField, setSortField] = useState<null | 'tenKhachHang' | 'tenSuKien' | 'viTriGhe' | 'trangThaiDangKy'>(null);
   const [sortAsc, setSortAsc] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const pageSize = 10;
 
   useEffect(() => {
     fetchData();
-  }, [page]);
+  }, [page, searchKeyword]);  
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:5555/api/dangky/get/all?page=${page}&size=${pageSize}`, {
-        credentials: 'include'
+      const query = new URLSearchParams({
+        page: String(page),
+        size: String(pageSize),
       });
+  
+      if (searchKeyword.trim()) {
+        query.append('search', searchKeyword.trim());
+      }
+  
+      const res = await fetch(`http://localhost:5555/api/dangky/get/all?${query.toString()}`, {
+        credentials: 'include',
+      });
+  
       if (res.ok) {
         const data = await res.json();
         setDangKys(data.content);
@@ -107,14 +120,47 @@ export default function DangKyPage() {
     return sortAsc
       ? String(aVal).localeCompare(String(bVal))
       : String(bVal).localeCompare(String(aVal));
-  });  
-
+  });
+  
   return (
     <main className="main-content">
       <h1>Quản lý Đăng ký Sự kiện</h1>
-
       <table className="admin-table">
         <thead>
+          {/* Search row */}
+          <tr className="table-search-row">
+            <th colSpan={6}>
+              <div className="search-wrapper">
+                <input
+                  type="text"
+                  placeholder="🔍 Tìm kiếm khách hàng hoặc sự kiện..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setSearchKeyword(searchInput.trim());
+                      setPage(0);
+                    }
+                  }}
+                  className="search-input"
+                />
+                {searchKeyword && (
+                  <button
+                    onClick={() => {
+                      setSearchKeyword('');
+                      setSearchInput('');
+                      setPage(0);
+                    }}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Đặt lại
+                  </button>
+                )}
+              </div>
+            </th>
+          </tr>
+
+          {/* Column header row */}
           <tr>
             <th>STT</th>
             <th onClick={() => handleSort('tenSuKien')} className="sortable">
@@ -133,7 +179,13 @@ export default function DangKyPage() {
           </tr>
         </thead>
         <tbody>
-          {sortedDangKys.map((dk, index) => (
+          {sortedDangKys.length === 0 ? (
+            <tr>
+              <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                Không có dữ liệu
+              </td>
+            </tr>
+          ) : (sortedDangKys.map((dk, index) => (
             <tr key={dk.maDangKy} className={index % 2 === 0 ? 'even' : 'odd'}>
               <td>{page * pageSize + index + 1}</td>
               <td>{DOMPurify.sanitize(dk.tenSuKien)}</td>
@@ -148,7 +200,7 @@ export default function DangKyPage() {
                 <button className="edit-btn" onClick={() => handleDetailClick(dk.maDangKy)}>Chi tiết</button>
               </td>
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
 

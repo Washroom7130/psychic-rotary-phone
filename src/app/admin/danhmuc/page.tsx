@@ -234,7 +234,13 @@ export default function DanhMucPage() {
         </thead>
 
         <tbody>
-          {danhMucs.map((dm, index) => (
+          {danhMucs.length === 0 ? (
+            <tr>
+              <td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>
+                Không có dữ liệu
+              </td>
+            </tr>
+          ) : (danhMucs.map((dm, index) => (
             <tr key={dm.maDanhMuc} className={index % 2 === 0 ? 'even' : 'odd'}>
               <td>{page * pageSize + index + 1}</td>
               <td
@@ -247,7 +253,7 @@ export default function DanhMucPage() {
                 <button className="delete-btn" onClick={() => handleDeleteClick(dm)}>Xóa</button>
               </td>
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
 
