@@ -246,7 +246,17 @@ export default function DangKyPage() {
                 <p><strong>Mã Đăng ký:</strong> {DOMPurify.sanitize(String(selectedDangKy.maDangKy))}</p>
                 <p><strong>Tên sự kiện:</strong> {DOMPurify.sanitize(selectedDangKy.tenSuKien)}</p>
                 <p><strong>Tên khách hàng:</strong> {DOMPurify.sanitize(selectedDangKy.tenKhachHang)}</p>
-                <p><strong>Ngày đăng ký:</strong> {DOMPurify.sanitize(selectedDangKy.ngayDangKy)}</p>
+                <p><strong>Ngày đăng ký:</strong> {' '}
+                    {selectedDangKy.ngayDangKy
+                        ? new Date(selectedDangKy.ngayDangKy).toLocaleString('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                        })
+                        : 'Không có'}</p>
                 <p><strong>Vị trí ghế:</strong> {DOMPurify.sanitize(selectedDangKy.viTriGhe)}</p>
                 <p><strong>Trạng thái:</strong> <span className={getStatusBadge(selectedDangKy.trangThaiDangKy)}>
                 {DOMPurify.sanitize(selectedDangKy.trangThaiDangKy)}

@@ -14,17 +14,33 @@ export default function DanhGiaPage() {
   const [selectedDanhGia, setSelectedDanhGia] = useState<any | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [detailError, setDetailError] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteError, setDeleteError] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [sortField, setSortField] = useState<null | 'tenKhachHang' | 'tenSuKien' | 'soSao'>(null);
+  const [sortAsc, setSortAsc] = useState(true);
+  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const pageSize = 10;
 
   useEffect(() => {
     fetchData();
-  }, [page]);
+  }, [page, search]);  
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:5555/api/danhgia/get/all?page=${page}&size=${pageSize}`, {
+      const url = new URL('http://localhost:5555/api/danhgia/get/all');
+      url.searchParams.append('page', page.toString());
+      url.searchParams.append('size', pageSize.toString());
+      if (search) {
+        url.searchParams.append('search', search);
+      }
+  
+      const res = await fetch(url.toString(), {
         credentials: 'include',
       });
+  
       if (res.ok) {
         const data = await res.json();
         setDanhGias(data.content);
@@ -34,7 +50,7 @@ export default function DanhGiaPage() {
     } catch (err) {
       console.error('Lỗi kết nối:', err);
     }
-  };
+  };  
 
   const handleDetailClick = async (maDanhGia: number) => {
     setDetailModalOpen(true);
@@ -59,10 +75,59 @@ export default function DanhGiaPage() {
     }
   };  
 
-  const handleDeleteClick = (maDanhGia: number) => {
-    console.log('Xóa:', maDanhGia);
-    // To be implemented in the next step
+  const handleDeleteConfirm = async () => {
+    if (!deleteId) return;
+  
+    setIsDeleting(true);
+    setDeleteError('');
+  
+    try {
+      const res = await fetch(`http://localhost:5555/api/danhgia/delete/${deleteId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        setDeleteModalOpen(false);
+        setDeleteId(null);
+        fetchData(); // reload the table
+      } else {
+        setDeleteError(data.error || 'Xóa thất bại');
+      }
+    } catch (err) {
+      setDeleteError('Không thể kết nối đến máy chủ');
+    } finally {
+      setIsDeleting(false);
+    }
   };
+
+  const handleSort = (field: typeof sortField) => {
+    if (sortField === field) {
+      setSortAsc(!sortAsc); // toggle
+    } else {
+      setSortField(field);
+      setSortAsc(true); // default to ASC
+    }
+  };
+  
+  const sortedDanhGias = [...danhGias];
+
+  if (sortField) {
+    sortedDanhGias.sort((a, b) => {
+      const valA = a[sortField] ?? '';
+      const valB = b[sortField] ?? '';
+
+      if (sortField === 'soSao') {
+        return sortAsc ? valA - valB : valB - valA;
+      }
+
+      return sortAsc
+        ? valA.localeCompare(valB, 'vi', { sensitivity: 'base' })
+        : valB.localeCompare(valA, 'vi', { sensitivity: 'base' });
+    });
+  }
 
   return (
     <main className="main-content">
@@ -70,17 +135,55 @@ export default function DanhGiaPage() {
 
       <table className="admin-table">
         <thead>
+          <tr className="table-search-row">
+            <th colSpan={5}>
+              <div className="search-wrapper">
+                <input
+                  type="text"
+                  placeholder="🔍 Tìm kiếm theo tên khách hàng..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setSearch(searchInput.trim());
+                      setPage(0);
+                    }
+                  }}
+                  className="search-input"
+                />
+                {search && (
+                  <button
+                    onClick={() => {
+                      setSearch('');
+                      setSearchInput('');
+                      setPage(0);
+                    }}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Đặt lại
+                  </button>
+                )}
+              </div>
+            </th>
+          </tr>
+
           <tr>
             <th>STT</th>
-            <th>Tên khách hàng</th>
-            <th>Tên sự kiện</th>
-            <th>Số sao</th>
+            <th onClick={() => handleSort('tenKhachHang')} className="sortable">
+              Tên khách hàng {sortField === 'tenKhachHang' ? (sortAsc ? '▲' : '▼') : '↕'}
+            </th>
+            <th onClick={() => handleSort('tenSuKien')} className="sortable">
+              Tên sự kiện {sortField === 'tenSuKien' ? (sortAsc ? '▲' : '▼') : '↕'}
+            </th>
+            <th onClick={() => handleSort('soSao')} className="sortable">
+              Số sao {sortField === 'soSao' ? (sortAsc ? '▲' : '▼') : '↕'}
+            </th>
             <th>Hành động</th>
           </tr>
         </thead>
 
         <tbody>
-          {danhGias.map((dg, index) => (
+          {sortedDanhGias.map((dg, index) => (
             <tr key={dg.maDanhGia} className={index % 2 === 0 ? 'even' : 'odd'}>
               <td>{page * pageSize + index + 1}</td>
               <td>{DOMPurify.sanitize(dg.tenKhachHang)}</td>
@@ -91,11 +194,21 @@ export default function DanhGiaPage() {
               </td>
               <td>
                 <button className="edit-btn" onClick={() => handleDetailClick(dg.maDanhGia)}>Chi tiết</button>
-                <button className="delete-btn" onClick={() => handleDeleteClick(dg.maDanhGia)}>Xóa</button>
+                <button
+                  className="delete-btn"
+                  onClick={() => {
+                    setDeleteId(dg.maDanhGia);
+                    setDeleteError('');
+                    setDeleteModalOpen(true);
+                  }}
+                >
+                  Xóa
+                </button>
+
               </td>
             </tr>
           ))}
-          {danhGias.length === 0 && (
+          {sortedDanhGias.length === 0 && (
             <tr>
               <td colSpan={5} style={{ textAlign: 'center', padding: '10px' }}>
                 Không có dữ liệu
@@ -142,7 +255,17 @@ export default function DanhGiaPage() {
                 <p><strong>Tên sự kiện:</strong> {DOMPurify.sanitize(selectedDanhGia.tenSuKien)}</p>
                 <p><strong>Số sao:</strong> {DOMPurify.sanitize(String(selectedDanhGia.loaiDanhGia))}/5 ⭐</p>
                 <p><strong>Bình luận:</strong> {DOMPurify.sanitize(selectedDanhGia.binhLuan || 'Không có')}</p>
-                <p><strong>Ngày đánh giá:</strong> {DOMPurify.sanitize(selectedDanhGia.ngayDanhGia)}</p>
+                <p><strong>Ngày đánh giá:</strong> {' '}
+                    {selectedDanhGia.ngayDanhGia
+                        ? new Date(selectedDanhGia.ngayDanhGia).toLocaleString('vi-VN', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                        })
+                        : 'Không có'}</p>
                 </div>
             ) : (
                 <p>Không có dữ liệu</p>
@@ -152,6 +275,38 @@ export default function DanhGiaPage() {
                 <button className="modal-cancel" onClick={() => setDetailModalOpen(false)}>Đóng</button>
             </div>
             </div>
+        </div>
+      )}
+
+      {deleteModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content fade-in">
+            <h2>Xác nhận xóa</h2>
+            <p><strong>{DOMPurify.sanitize('Bạn có chắc chắn muốn xóa đánh giá này không?')}</strong></p>
+
+            {deleteError && <p className="error-text">{deleteError}</p>}
+
+            <div className="modal-buttons">
+              <button
+                className="modal-save"
+                style={{ backgroundColor: '#dc3545' }}
+                onClick={handleDeleteConfirm}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Đang xóa...' : 'Xác nhận'}
+              </button>
+              <button
+                className="modal-cancel"
+                onClick={() => {
+                  setDeleteModalOpen(false);
+                  setDeleteId(null);
+                  setDeleteError('');
+                }}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </main>

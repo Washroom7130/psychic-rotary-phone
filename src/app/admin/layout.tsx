@@ -34,7 +34,8 @@ function AdminContent({ children }: { children: React.ReactNode }) {
           <Link href="/admin/dangky">Đăng ký</Link>
           <Link href="/admin/hoadon">Hóa đơn</Link>
           <Link href="/admin/diemdanh">Điểm danh</Link>
-          {isQuanLy && <Link href="/admin/taikhoan">Tài khoản</Link>}
+          {isQuanLy && <Link href="/admin/nhanvien">Nhân viên</Link>}
+          {isQuanLy && <Link href="/admin/khachhang">Khách hàng</Link>}
           <Link href="/admin/danhgia">Đánh giá</Link>
           <Link href="/admin/cauhoi">Câu hỏi</Link>
           <Link href="/admin/ticket">Ticket</Link>

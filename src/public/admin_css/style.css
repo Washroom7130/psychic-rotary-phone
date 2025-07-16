@@ -310,3 +310,18 @@ body, html {
 .detail-info strong {
   color: #333;
 }
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.modal-content textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
