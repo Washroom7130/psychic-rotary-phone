@@ -74,8 +74,8 @@ export default function Header() {
 
                 <div className="header-actions">
                 <div className="search">
-                    <form action="/event" method="GET">
-                    <input type="text" name="keyword" placeholder="Tìm kiếm..." />
+                    <form action="/sukien" method="GET">
+                    <input type="text" name="search" placeholder="Tìm kiếm..." />
                     <button type="submit"><i className="fas fa-search"></i></button>
                     </form>
                 </div>
