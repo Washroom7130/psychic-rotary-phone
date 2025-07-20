@@ -73,6 +73,15 @@
   transition: background-color 0.3s ease;
 }
 
+.btn-register:disabled {
+  cursor: not-allowed;
+  background-color: #444;
+}
+
+.btn-register:disabled:hover {
+  background-color: #444;
+}
+
 .btn-register:hover {
   background-color: #0056b3;
 }
@@ -181,4 +190,16 @@
 .review-item strong {
   font-weight: bold;
   color: #333;
+}
+
+a.nostyle:link {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
+}
+
+a.nostyle:visited {
+  text-decoration: inherit;
+  color: inherit;
+  cursor: auto;
 }

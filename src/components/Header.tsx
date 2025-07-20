@@ -21,9 +21,16 @@ export default function Header() {
 
     // Determine the correct link based on user role
     let accountLink = '/login'; // default to login if not logged in
+    let displayText = ' Login';
     if (user) {
-        if (user.vaiTro === 'KhachHang') accountLink = '/account';
-        else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') accountLink = '/admin';
+        if (user.vaiTro === 'KhachHang') {
+            accountLink = '/myaccount';
+            displayText = ' Trang của tôi'
+        } 
+        else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') {
+            accountLink = '/admin';
+            displayText = ' Trang quản lí';
+        } 
     }
 
     const handleLogout = async () => {
@@ -66,9 +73,9 @@ export default function Header() {
                 <nav className="main-menu">
                 <ul>
                     <li><Link href="/">Trang chủ</Link></li>
-                    <li><Link href="/event">Sự Kiện</Link></li>
-                    <li><Link href="/about1">Giới thiệu</Link></li>
-                    <li><Link href="/contact">Liên hệ</Link></li>
+                    <li><Link href="/sukein">Sự Kiện</Link></li>
+                    <li><Link href="/about">Giới thiệu</Link></li>
+                    <li><Link href="/lienhe">Liên hệ</Link></li>
                 </ul>
                 </nav>
 
@@ -80,11 +87,11 @@ export default function Header() {
                     </form>
                 </div>
                 <div className="account">
-                    <Link href={accountLink} id="user-icon"><i className="fas fa-user"></i></Link>
+                    <Link className="nostyle" href={accountLink} id="user-icon"><i className="fas fa-user"></i> {displayText}</Link>
                 </div>
                 {user && (
                     <div className="account" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-                        <Link href="#" id="user-icon"><FontAwesomeIcon icon={faSignOutAlt} /> Sign out</Link>            
+                        <Link className="nostyle" href="#" id="user-icon"><FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất</Link>            
                     </div>
                 )}
                 </div>

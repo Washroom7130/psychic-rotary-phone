@@ -58,6 +58,11 @@
   background-color: #2980b9;
 }
 
+.event-booking button:disabled {
+  cursor: not-allowed;
+  background-color: #444;
+}
+
 .event-booking .seating-chart {
   margin-top: 30px;
 }
@@ -326,3 +331,4 @@
     flex-direction: column;
   }
 }
+

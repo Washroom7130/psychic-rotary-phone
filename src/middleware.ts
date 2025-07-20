@@ -3,9 +3,11 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token');
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+  const pathname = request.nextUrl.pathname;
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isMyAccountRoute = pathname.startsWith('/myaccount');
 
-  if (isAdminRoute && !token) {
+  if ((isAdminRoute || isMyAccountRoute) && !token) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -13,5 +15,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/myaccount/:path*'],
 };
