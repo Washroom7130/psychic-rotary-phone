@@ -8,13 +8,13 @@ import '@/public/css/my-account.css';
 import { useUser } from '@/context/UserContext';
 
 function MyAccountContent({ children }: { children: React.ReactNode }) {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const router = useRouter();
   const pathname = usePathname();
 
   const navItems = [
     { label: 'THÔNG TIN CÁ NHÂN', href: '/myaccount/personal-info', section: 'personal-info' },
-    { label: 'ĐỔI MẬT KHẨU', href: '/myaccount/account-info', section: 'account-info' },
+    { label: 'ĐỔI MẬT KHẨU', href: '/myaccount/change-password', section: 'account-info' },
     { label: 'LỊCH SỬ GIAO DỊCH', href: '/myaccount/orders', section: 'orders' },
     { label: 'ĐĂNG XUẤT', href: '/logout', section: 'logout' },
   ];
@@ -30,19 +30,39 @@ function MyAccountContent({ children }: { children: React.ReactNode }) {
     return null;
   }
 
+  const handleLogout = async () => {
+    try {
+      await fetch('http://localhost:5555/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      setUser(null); // clear context
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
     <div className="account-container">
         {/* Sidebar Navigation */}
         <div className="sidebar">
         {navItems.map((item) => (
-            <Link href={item.href} key={item.section}>
             <div
-                className={`sidebar-item ${pathname === item.href ? ' active' : ''}`}
-                data-section={item.section}
+              key={item.section}
+              className={`sidebar-item ${pathname === item.href ? ' active' : ''}`}
+              data-section={item.section}
+              onClick={item.section === 'logout' ? handleLogout : undefined}
+              style={{ cursor: item.section === 'logout' ? 'pointer' : 'default' }}
             >
+              {item.section === 'logout' ? (
                 <span>{item.label}</span>
+              ) : (
+                <Link className="nostyle" href={item.href}>
+                  <span>{item.label}</span>
+                </Link>
+              )}
             </div>
-            </Link>
         ))}
         </div>
 
@@ -57,11 +77,7 @@ export default function MyAccountLayout({ children }: { children: React.ReactNod
   return (
     <html>
       <body>
-        <main>
-            <section>
-                <MyAccountContent>{children}</MyAccountContent>
-            </section>
-        </main>
+            <MyAccountContent>{children}</MyAccountContent>
       </body>
     </html>
   );

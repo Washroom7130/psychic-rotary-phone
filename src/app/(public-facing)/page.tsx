@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import Link from 'next/link';
 
 interface Event {
   maSuKien: number;
@@ -203,9 +204,9 @@ export default function HomePage() {
               <h6 className="team-name">{speaker.name}</h6>
               <span className="team-title">{speaker.title}</span>
               <ul className="team-social">
-                {[...Array(5)].map((_, j) => (
+                {/* {[...Array(5)].map((_, j) => (
                   <li key={j}><a href="#"><i className="ion-social-facebook"></i></a></li>
-                ))}
+                ))} */}
               </ul>
             </div>
           ))}
@@ -238,8 +239,8 @@ export default function HomePage() {
               </p>
               <div className="event-footer">
                 <span className="event-price">{event.phiThamGia.toLocaleString()}₫</span>
-                <a href={`event-detail.html?id=${event.maSuKien}`} className="btn-detail">Xem chi tiết</a>
-                <a href={`register-event.html?id=${event.maSuKien}`} className="btn-register">Đăng ký</a>
+                <Link href={`/sukien/${event.maSuKien}`} className="btn-detail">Xem chi tiết</Link>
+                <Link href={`/sukien/${event.maSuKien}`} className="btn-register">Đăng ký</Link>
               </div>
             </div>
           </div>
@@ -270,7 +271,7 @@ export default function HomePage() {
                         aria-expanded={openId === faq.id}
                         aria-controls={faq.id}
                       >
-                        <img src="img/banners/info.png" alt="" /> {faq.question}
+                        <img src="/img/banners/info.png" alt="" /> {faq.question}
                       </button>
                     </h5>
                   </div>
