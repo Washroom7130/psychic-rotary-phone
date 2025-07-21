@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import '@/public/css/style.css';
 import '@/public/css/event-detail.css';
 import { useUser } from '@/context/UserContext';
@@ -30,10 +30,9 @@ interface Review {
 }
 
 export default function EventDetailPage() {
-  const router = useRouter();
-  const maSuKien = typeof window !== 'undefined'
-    ? window.location.pathname.split('/').pop()
-    : '';
+  const params = useParams();
+  const maSuKien = Number(params?.maSuKien);
+
 
   const [event, setEvent] = useState<SuKien | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -43,7 +42,6 @@ export default function EventDetailPage() {
   const [content, setContent] = useState('');
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
 
   useEffect(() => {
     if (!maSuKien) return;
@@ -145,7 +143,7 @@ export default function EventDetailPage() {
       setIsSubmitting(false);
     }
   };  
-
+// `http://localhost:5555/api/sukien/get${event.anhSuKien}`
   return (
     <main>
       <div className="event-detail-container">
@@ -153,7 +151,9 @@ export default function EventDetailPage() {
 
         <div className="event-detail-wrapper">
           <div className="event-image">
-            <img id="event-img" src={event.anhSuKien} alt="Ảnh sự kiện" />
+            <img id="event-img" src={event.anhSuKien === null ? 
+              'https://cdn5.vectorstock.com/i/1000x1000/74/69/upcoming-events-neon-sign-on-brick-wall-background-vector-37057469.jpg' : 
+              `http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
           </div>
           <div className="event-info">
             <h1 id="event-title">{event.tenSuKien}</h1>
@@ -165,7 +165,15 @@ export default function EventDetailPage() {
             <p id="event-description">{event.moTa}</p>
             <p><strong>Ghế ngồi:</strong> <span id="event-seats">{event.luongChoNgoi}</span></p>
             <p><strong>Trạng thái:</strong> <span id="event-status">{event.trangThaiSuKien}</span></p>
-            <button disabled={event.trangThaiSuKien !== 'Còn chỗ'} id="register-link" className="btn-register"><Link href={`/dangky/${event.maSuKien}`} className='nostyle'>Đăng ký</Link></button>
+            {event.trangThaiSuKien === 'Còn chỗ' ? (
+              <Link href={`/dangky/${event.maSuKien}`} className="nostyle">
+                <button id="register-link" className="btn-register">Đăng ký</button>
+              </Link>
+            ) : (
+              <button id="register-link" className="btn-register" disabled>
+                Đăng ký
+              </button>
+            )}
           </div>
         </div>
 

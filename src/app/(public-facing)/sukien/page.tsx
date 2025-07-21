@@ -136,7 +136,9 @@ export default function SukienPage() {
   ) : (events.map(event => (
     <div className="event-card" key={event.maSuKien}>
       <div className="event-image">
-        <img src={`http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt={event.tenSuKien} />
+        <img id="event-img" src={event.anhSuKien === null ? 
+              'https://cdn5.vectorstock.com/i/1000x1000/74/69/upcoming-events-neon-sign-on-brick-wall-background-vector-37057469.jpg' : 
+              `http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
       </div>
       <div className="event-info">
         <div className="event-meta">

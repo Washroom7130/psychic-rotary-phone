@@ -7,7 +7,7 @@ import { UserProvider, useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 
 function AdminContent({ children }: { children: React.ReactNode }) {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const router = useRouter();
 
   if (user === null) {
@@ -22,6 +22,19 @@ function AdminContent({ children }: { children: React.ReactNode }) {
   }
 
   const isQuanLy = user.vaiTro === 'QuanLy';
+
+  const handleLogout = async () => {
+    try {
+      await fetch('http://localhost:5555/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+      setUser(null); // clear context
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -39,6 +52,9 @@ function AdminContent({ children }: { children: React.ReactNode }) {
           <Link href="/admin/danhgia">Đánh giá</Link>
           <Link href="/admin/cauhoi">Câu hỏi</Link>
           <Link href="/admin/ticket">Ticket</Link>
+          <Link href="/admin/personal-info">Thông tin cá nhân</Link>
+          <Link href="/admin/change-password">Đổi mật khẩu</Link>
+          <Link href="#" onClick={handleLogout}>Đăng xuất</Link>
         </nav>
       </aside>
 

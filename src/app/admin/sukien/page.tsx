@@ -191,6 +191,7 @@ export default function SuKienTablePage() {
           danhMuc: '',
           anhSuKien: null as File | null,
         });
+        fetchData();
       } else {
         setAddError(result.error || result.message || 'Đã có lỗi xảy ra!');
       }

@@ -42,7 +42,7 @@ function MyAccountContent({ children }: { children: React.ReactNode }) {
       console.error('Logout failed:', error);
     }
   };
-
+// {`sidebar-item ${pathname === item.href ? ' active' : ''}`} -- cause hydration
   return (
     <div className="account-container">
         {/* Sidebar Navigation */}
@@ -75,10 +75,8 @@ function MyAccountContent({ children }: { children: React.ReactNode }) {
 
 export default function MyAccountLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
-      <body>
+
             <MyAccountContent>{children}</MyAccountContent>
-      </body>
-    </html>
+
   );
 }
