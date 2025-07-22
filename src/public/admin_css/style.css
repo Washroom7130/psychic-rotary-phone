@@ -7,14 +7,18 @@ body, html {
 }
 
 .admin-content {
-  display: flex;
-  flex-grow: 1;
+  flex: 1;
+  overflow-y: auto;
+  height: 100vh;
+  padding: 20px; /* optional spacing */
 }
 
 .container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #fff;
+  position: relative;
+  overflow: hidden; /* new: prevent sidebar from affecting layout */
 }
 
 .sidebar {
@@ -22,6 +26,11 @@ body, html {
   background-color: #007bff;
   color: white;
   padding: 20px;
+  position: sticky; /* or fixed, see notes below */
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0; /* new: prevent it from shrinking */
 }
 
 .sidebar h2 {

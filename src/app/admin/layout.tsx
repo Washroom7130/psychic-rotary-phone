@@ -41,7 +41,7 @@ function AdminContent({ children }: { children: React.ReactNode }) {
       <aside className="sidebar">
         <h2>Admin Panel</h2>
         <nav>
-          {isQuanLy && <Link href="/admin/dashboard">Dashboard</Link>}
+          {isQuanLy && <Link href="/admin/statistics">Thống kê</Link>}
           <Link href="/admin/sukien">Sự kiện</Link>
           <Link href="/admin/danhmuc">Danh mục</Link>
           <Link href="/admin/dangky">Đăng ký</Link>
