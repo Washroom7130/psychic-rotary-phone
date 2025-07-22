@@ -115,7 +115,6 @@ const ratingChartData = data?.ratingStats
         title: { display: true, text: 'Số lượng khách hàng' },
       },
       x: {
-        offset: true,
         title: { display: true, text: 'Thời gian' },
       },
     },
@@ -170,7 +169,7 @@ const ratingChartData = data?.ratingStats
     const revenues = sortedDates.map((d) => revenueTimeline[d]);
 
     // Append current endDate point
-    sortedDates.push(endDate);
+    //sortedDates.push(endDate);
     revenues.push(0); // default value
 
     setRevenueChartData({
@@ -193,7 +192,7 @@ const activeCounts = activityDates.map((d) => khachTimeline[d].active || 0);
 const nonActiveCounts = activityDates.map((d) => khachTimeline[d]['non-active'] || 0);
 
 // Add last point (current endDate)
-activityDates.push(endDate);
+//activityDates.push(endDate);
 activeCounts.push(0);
 nonActiveCounts.push(0);
 

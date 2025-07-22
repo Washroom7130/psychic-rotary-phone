@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import '@/public/admin_css/style.css';
+import '@/public/admin_css/danhmuc.css';
 import Modal from '@/components/Modal';
 
 interface HoaDon {

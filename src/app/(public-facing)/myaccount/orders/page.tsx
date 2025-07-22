@@ -12,6 +12,7 @@ interface HoaDon {
   phuongThucThanhToan: string;
   tenKhachHang: string;
   tenSuKien: string;
+  maSuKien: string;
 }
 
 interface ApiResponse {
@@ -20,11 +21,16 @@ interface ApiResponse {
   number: number;
 }
 
+interface CauHoiResponse {
+  noiDungCauHoi: string;
+}
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<HoaDon[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [questions, setQuestions] = useState<Record<string, string>>({});
 
   const fetchOrders = async (page: number) => {
     try {
@@ -39,12 +45,37 @@ export default function OrdersPage() {
     }
   };
 
+  const fetchCauHoi = async (maSuKien: string, maHoaDon: string) => {
+    try {
+      const res = await fetch(`http://localhost:5555/api/cauhoi/get/sukien/${maSuKien}`, {
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('No question data');
+      }
+
+      const data: CauHoiResponse = await res.json();
+      setQuestions((prev) => ({ ...prev, [maHoaDon]: 'Câu hỏi đã đặt: ' + data.noiDungCauHoi }));
+    } catch (err) {
+      setQuestions((prev) => ({
+        ...prev,
+        [maHoaDon]: 'Bạn đã không đặt câu hỏi cho sự kiện này',
+      }));
+    }
+  };
+
   useEffect(() => {
     fetchOrders(page);
   }, [page]);
 
-  const toggleDropdown = (id: string) => {
-    setExpanded((prev) => (prev === id ? null : id));
+  const toggleDropdown = (order: HoaDon) => {
+    const isExpanding = expanded !== order.maHoaDon;
+    setExpanded(isExpanding ? order.maHoaDon : null);
+
+    if (isExpanding && order.trangThaiHoaDon === 'Đã thanh toán' && !questions[order.maHoaDon]) {
+      fetchCauHoi(order.maSuKien, order.maHoaDon);
+    }
   };
 
   return (
@@ -56,7 +87,7 @@ export default function OrdersPage() {
           <div key={order.maHoaDon} className="order-card">
             <button
               className="order-header"
-              onClick={() => toggleDropdown(order.maHoaDon)}
+              onClick={() => toggleDropdown(order)}
             >
               <div className="order-summary">
                 <div className="order-title">{order.tenSuKien}</div>
@@ -64,13 +95,13 @@ export default function OrdersPage() {
                   Tổng tiền: {order.tongTien.toLocaleString()} VND
                 </div>
                 <span className={`badge ${
-                order.trangThaiHoaDon === 'Chưa thanh toán'
+                  order.trangThaiHoaDon === 'Chưa thanh toán'
                     ? 'chua-thanh-toan'
                     : order.trangThaiHoaDon === 'Đã thanh toán'
                     ? 'da-thanh-toan'
                     : 'da-huy'
                 }`}>
-                {order.trangThaiHoaDon}
+                  {order.trangThaiHoaDon}
                 </span>
               </div>
               <div className="order-toggle">{expanded === order.maHoaDon ? '▲' : '▼'}</div>
@@ -78,7 +109,11 @@ export default function OrdersPage() {
 
             {expanded === order.maHoaDon && (
               <div className="order-details">
-                <p>Placeholder</p>
+                {order.trangThaiHoaDon === 'Đã thanh toán' ? (
+                  <p>{questions[order.maHoaDon] || 'Đang tải câu hỏi...'}</p>
+                ) : (
+                  <p>Không có dữ liệu câu hỏi cho hóa đơn này</p>
+                )}
               </div>
             )}
           </div>
@@ -87,24 +122,23 @@ export default function OrdersPage() {
 
       <div className="pagination">
         <button
-            onClick={() => setPage((p) => Math.max(p - 1, 0))}
-            disabled={page === 0}
+          onClick={() => setPage((p) => Math.max(p - 1, 0))}
+          disabled={page === 0}
         >
-            Trang trước
+          Trang trước
         </button>
 
         <span className="current-page">
-            Trang {page + 1} / {totalPages}
+          Trang {page + 1} / {totalPages}
         </span>
 
         <button
-            onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
-            disabled={page >= totalPages - 1}
+          onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
+          disabled={page >= totalPages - 1}
         >
-            Trang sau
+          Trang sau
         </button>
-    </div>
-
+      </div>
     </section>
   );
 }

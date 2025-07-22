@@ -24,7 +24,7 @@ export default function Header() {
     let displayText = ' Login';
     if (user) {
         if (user.vaiTro === 'KhachHang') {
-            accountLink = '/myaccount';
+            accountLink = '/myaccount/personal-info';
             displayText = ' Trang của tôi'
         } 
         else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') {
