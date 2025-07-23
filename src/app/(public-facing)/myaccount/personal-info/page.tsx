@@ -2,9 +2,12 @@
 
 import { useUser } from "@/context/UserContext";
 import { FormEvent, useEffect, useState } from "react";
+import Modal from "@/components/Modal"; // adjust path if needed
+import { useRouter } from "next/navigation";
+
 
 export default function PersonalDataPage() {
-    const { user, refreshUser } = useUser();
+    const { user, setUser, refreshUser } = useUser();
     const [formData, setFormData] = useState({
         hoTen: "",
         gioiTinh: "",
@@ -17,6 +20,8 @@ export default function PersonalDataPage() {
     const [initialData, setInitialData] = useState(formData);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         if (user) {
@@ -91,6 +96,38 @@ export default function PersonalDataPage() {
         setError("Không thể kết nối đến máy chủ.");
         }
     };
+
+    const handleLogout = async () => {
+        try {
+          await fetch("http://localhost:5555/api/auth/logout", {
+            method: "POST",
+            credentials: "include",
+          });
+          setUser(null);
+          router.push("/");
+        } catch (error) {
+          console.error("Logout failed:", error);
+        }
+      };
+      
+      const handleDeactivate = async () => {
+        try {
+          const res = await fetch("http://localhost:5555/api/taikhoan/deactivate", {
+            method: "POST",
+            credentials: "include",
+          });
+      
+          const data = await res.json();
+      
+          if (res.ok && data.message) {
+            await handleLogout();
+          } else {
+            setError(data.error || "Không thể dừng tài khoản.");
+          }
+        } catch {
+          setError("Không thể kết nối đến máy chủ.");
+        }
+      };      
 
     return (
         <div className="content">
@@ -187,10 +224,21 @@ export default function PersonalDataPage() {
             {error && <p style={{ color: "red" }}>{error}</p>}
 
             <div className="form-buttons">
-                <button type="submit" className="btn-save">Lưu thông tin</button>
+            <button type="submit" className="btn-save">Lưu thông tin</button>
+            <button type="button" className="btn-deactivate" onClick={() => setIsModalOpen(true)}>
+                Dừng tài khoản
+            </button>
             </div>
             </form>
         </div>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Xác nhận dừng tài khoản">
+        <p>Bạn có chắc chắn muốn dừng tài khoản của mình không?</p>
+        <div className="form-buttons" style={{ marginTop: '1rem' }}>
+            <button onClick={handleDeactivate} className="btn-deactivate">Có, dừng tài khoản</button>
+            <button onClick={() => setIsModalOpen(false)} className="btn-save">Hủy</button>
+        </div>
+        </Modal>
+
         </div>
     );
 }
