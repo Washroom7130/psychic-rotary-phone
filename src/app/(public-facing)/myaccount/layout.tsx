@@ -48,23 +48,29 @@ function MyAccountContent({ children }: { children: React.ReactNode }) {
         {/* Sidebar Navigation */}
         <div className="sidebar">
         {navItems.map((item) => (
+          item.section === 'logout' ? (
             <div
               key={item.section}
-              className={`sidebar-item ${pathname === item.href ? ' active' : ''}`}
+              className="sidebar-item"
               data-section={item.section}
-              onClick={item.section === 'logout' ? handleLogout : undefined}
-              style={{ cursor: item.section === 'logout' ? 'pointer' : 'default' }}
+              onClick={handleLogout}
+              style={{ cursor: 'pointer' }}
             >
-              {item.section === 'logout' ? (
-                <span>{item.label}</span>
-              ) : (
-                <Link className="nostyle" href={item.href}>
-                  <span>{item.label}</span>
-                </Link>
-              )}
+              <span>{item.label}</span>
             </div>
+          ) : (
+            <Link
+              key={item.section}
+              href={item.href}
+              className={`sidebar-item nostyle${pathname === item.href ? ' active' : ''}`}
+              data-section={item.section}
+            >
+              <span>{item.label}</span>
+            </Link>
+          )
         ))}
-        </div>
+      </div>
+
 
         <div className="content">
         {children}

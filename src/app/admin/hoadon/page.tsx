@@ -228,19 +228,20 @@ export default function HoaDonPage() {
                 <p><strong>Trạng thái:</strong> <span className={getStatusBadge(selectedHoaDon.trangThaiHoaDon)}>{DOMPurify.sanitize(selectedHoaDon.trangThaiHoaDon)}</span> </p>
                 <p><strong>Tổng tiền:</strong> {Number(selectedHoaDon.tongTien).toLocaleString('vi-VN')} VND</p>
                 <p><strong>Phương thức thanh toán:</strong> {DOMPurify.sanitize(selectedHoaDon.phuongThucThanhToan)}</p>
+                {selectedHoaDon.trangThaiHoaDon === 'Đã thanh toán' &&
                 <p>
-                    <strong>Thời gian thanh toán:</strong>{' '}
-                    {selectedHoaDon.thoiGianThanhCong
-                        ? new Date(selectedHoaDon.thoiGianThanhCong).toLocaleString('vi-VN', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false,
-                        })
-                        : 'Không có'}
-                </p>
+                <strong>Thời gian thanh toán:</strong>{' '}
+                {selectedHoaDon.thoiGianThanhCong
+                    ? new Date(selectedHoaDon.thoiGianThanhCong).toLocaleString('vi-VN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                    })
+                    : 'Không có'}
+            </p>}
 
             </div>
             ) : (

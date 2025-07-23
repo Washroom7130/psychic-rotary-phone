@@ -25,10 +25,28 @@ import {
   faTiktok,
 } from "@/lib/icons";
 import { useUser } from "@/context/UserContext";
+import { useEffect, useState } from "react";
+
+interface DanhMuc {
+  maDanhMuc: number;
+  tenDanhMuc: string;
+}
 
 export default function Footer() {
 
     const { user } = useUser();
+    const [categories, setCategories] = useState<DanhMuc[]>([]);
+
+    useEffect(() => {
+      fetch('http://localhost:5555/api/danhmucsukien/get/all?size=5', {
+        credentials: 'include',
+      })
+        .then(res => res.json())
+        .then(data => {
+          setCategories(data.content || []);
+        })
+        .catch(err => console.error('Error fetching categories:', err));
+    }, []);
 
   return (
     <>
@@ -48,7 +66,13 @@ export default function Footer() {
             <div className="footer-column">
               <h3>Danh mục sự kiện</h3>
               <div id="footer-categories" className="footer-categories">
-                <div className="loading">Đang tải danh mục...</div>
+                {categories ? (
+                  categories.map((cat) => (
+                    <Link key={cat.maDanhMuc} href={`/sukien?maDanhMuc=${cat.maDanhMuc}`}>{cat.tenDanhMuc}</Link>
+                  ))
+                ) : (
+                   <div className="loading">Đang tải danh mục...</div>
+                )}
               </div>
             </div>
 

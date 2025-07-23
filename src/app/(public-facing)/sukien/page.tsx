@@ -14,31 +14,34 @@ interface DanhMuc {
 }
 
 interface Event {
-    maSuKien: number;
-    tenSuKien: string;
-    moTa: string;
-    anhSuKien: string;
-    diaDiem: string;
-    trangThaiSuKien: string;
-    phiThamGia: number;
-    luongChoNgoi: number;
-    ngayBatDau: string;
-    ngayKetThuc: string;
-    maDanhMuc: number | null;
-    rating: number;
-  }
+  maSuKien: number;
+  tenSuKien: string;
+  moTa: string;
+  anhSuKien: string;
+  diaDiem: string;
+  trangThaiSuKien: string;
+  phiThamGia: number;
+  luongChoNgoi: number;
+  ngayBatDau: string;
+  ngayKetThuc: string;
+  maDanhMuc: number | null;
+  rating: number;
+}
 
 export default function SukienPage() {
   const [categories, setCategories] = useState<DanhMuc[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [price, setPrice] = useState(5000000);
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchParam = searchParams.get("search") ?? "";
+  const trangThaiParam = searchParams.get("trangThai") ?? "";
   const categoryParam = searchParams.get("category") ?? "all";
+  const costStartParam = searchParams.get("costStart") ?? "";
+  const costEndParam = searchParams.get("costEnd") ?? "";
   const [errorMsg, setErrorMsg] = useState('');
-  const [maxPrice, setMaxPrice] = useState(5000000);
 
   useEffect(() => {
     fetch('http://localhost:5555/api/danhmucsukien/get/all?size=100', {
@@ -52,34 +55,40 @@ export default function SukienPage() {
   }, []);
 
   useEffect(() => {
+    setPage(0);
+  }, [searchParam, categoryParam, trangThaiParam, costStartParam, costEndParam]);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       try {
         const params = new URLSearchParams();
         params.set("page", page.toString());
         params.set("size", "12");
-        params.set("trangThai", "Còn chỗ,Hết chỗ,Hết hạn đăng ký,Đang diễn ra");
-  
+
         if (searchParam) params.set("search", searchParam);
         if (categoryParam && categoryParam !== "all") {
           params.set("maDanhMuc", categoryParam);
         }
-  
+        if (trangThaiParam && trangThaiParam !== "all") {
+          params.set("trangThai", trangThaiParam);
+        }
+        if (costStartParam) params.set("costStart", costStartParam);
+        if (costEndParam) params.set("costEnd", costEndParam);
+
         const res = await fetch(
           `http://localhost:5555/api/sukien/get/all?${params.toString()}`,
-          {
-            credentials: "include",
-          }
+          { credentials: "include" }
         );
-  
+
         const data = await res.json();
-  
+
         if (res.ok) {
           if (data.content.length === 0) {
             setErrorMsg("Không tìm thấy kết quả phù hợp");
           } else {
             setEvents(data.content);
             setTotalPages(data.totalPages);
-            setErrorMsg(""); // clear error
+            setErrorMsg("");
           }
         } else {
           setEvents([]);
@@ -93,9 +102,18 @@ export default function SukienPage() {
         setErrorMsg("Không tìm thấy kết quả phù hợp");
       }
     };
-  
+
     fetchEvents();
-  }, [page, searchParam, categoryParam]);  
+  }, [page, searchParam, categoryParam, trangThaiParam, costStartParam, costEndParam]);
+
+  const handleFilterByPrice = () => {
+    const query = new URLSearchParams();
+    if (categoryParam && categoryParam !== 'all') query.set('category', categoryParam);
+    if (trangThaiParam) query.set('trangThai', trangThaiParam);
+    query.set('costStart', '0');
+    query.set('costEnd', price.toString());
+    router.push(`/sukien?${query.toString()}`);
+  };
 
   return (
     <main>
@@ -105,15 +123,18 @@ export default function SukienPage() {
             <h3>Danh mục</h3>
             <ul className="event-categories">
               <li>
-                <Link href="/sukien?category=all" data-category="all">
+                <Link
+                  href={`/sukien?category=all${trangThaiParam !== 'all' ? `&trangThai=${trangThaiParam}` : ''}${costEndParam ? `&costStart=0&costEnd=${costEndParam}` : ''}`}
+                  className={categoryParam === 'all' ? 'active-filter' : ''}
+                >
                   Tất cả
                 </Link>
               </li>
               {categories.map((cat) => (
                 <li key={cat.maDanhMuc}>
                   <Link
-                    href={`/sukien?category=${cat.maDanhMuc}`}
-                    data-category={cat.maDanhMuc}
+                    href={`/sukien?category=${cat.maDanhMuc}${trangThaiParam !== 'all' ? `&trangThai=${trangThaiParam}` : ''}${costEndParam ? `&costStart=0&costEnd=${costEndParam}` : ''}`}
+                    className={categoryParam === cat.maDanhMuc.toString() ? 'active-filter' : ''}
                   >
                     {cat.tenDanhMuc}
                   </Link>
@@ -121,11 +142,54 @@ export default function SukienPage() {
               ))}
             </ul>
 
-            {/* <h3>Lọc theo giá</h3>
-            <input type="range" id="priceRange" min="0" max="5000000" step="50000" />
+            <h3>Trạng thái</h3>
+            <ul className="event-categories">
+              <li>
+                <Link
+                  href={`/sukien?${categoryParam !== 'all' ? `category=${categoryParam}` : ''}${costEndParam ? `&costStart=0&costEnd=${costEndParam}` : ''}`}
+                  className={!trangThaiParam ? 'active-filter' : ''}
+                >
+                  Tất cả
+                </Link>
+              </li>
+              {[ 'Còn chỗ', 'Hết chỗ', 'Hết hạn đăng ký', 'Đang diễn ra', 'Đã kết thúc', 'Hủy bỏ' ].map((status) => (
+                <li key={status}>
+                  <Link
+                    href={`/sukien?trangThai=${encodeURIComponent(status)}${categoryParam !== 'all' ? `&category=${categoryParam}` : ''}${costEndParam ? `&costStart=0&costEnd=${costEndParam}` : ''}`}
+                    className={trangThaiParam === status ? 'active-filter' : ''}
+                  >
+                    {status}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <h3>Lọc theo giá</h3>
+            <input
+              type="range"
+              min="0"
+              max="5000000"
+              step="50000"
+              value={price}
+              onChange={(e) => setPrice(parseInt(e.target.value))}
+            />
             <p>
-              Giá tối đa: <span id="priceValue">5.000.000₫</span>
-            </p> */} {/*May revert back this later*/}
+              Giá tối đa: <span>{price.toLocaleString('vi-VN')}₫</span>
+            </p>
+            <button
+              onClick={handleFilterByPrice}
+              style={{
+                marginTop: '10px',
+                padding: '6px 12px',
+                backgroundColor: '#0070f3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              Lọc
+            </button>
           </aside>
 
           <section className="event-grid" id="eventGrid">
