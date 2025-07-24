@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import '@/public/css/style.css';
 import '@/public/css/index.css';
 import '@/public/css/account.css';
@@ -17,6 +17,13 @@ export default function LoginPage() {
   const [loginError, setError] = useState<string | null>(null);
   const [isSubmittingLogin, setIsSubmittingLogin] = useState(false);
   const [isSubmittingRegister, setIsSubmittingRegister] = useState(false);
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+    }
+  }, [user]);  
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

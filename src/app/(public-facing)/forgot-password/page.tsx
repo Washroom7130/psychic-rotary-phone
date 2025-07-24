@@ -1,17 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import '@/public/css/style.css';
 import '@/public/css/index.css';
 import '@/public/css/account.css';
 import '@/public/css/forget-password.css';
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [sending, setSending] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const router = useRouter();
+    const { user } = useUser();
+    
+    useEffect(() => {
+      if (user) {
+        router.push('/');
+      }
+    }, [user]);
   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();

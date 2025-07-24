@@ -76,14 +76,12 @@ export default function Footer() {
               </div>
             </div>
 
-            {user && (
+            {user && user.vaiTro === 'KhachHang' && (
                 <div className="footer-column">
                 <h3>Thông tin của bạn</h3>
                 <ul className="account-footer-list">
-                  <li><Link href="/my-account"><FontAwesomeIcon icon={faUser} /> Thông tin cá nhân</Link></li>
-                  <li><Link href="/my-account"><FontAwesomeIcon icon={faLock} /> Đổi mật khẩu</Link></li>
-                  <li><Link href="/my-account"><FontAwesomeIcon icon={faReceipt} /> Lịch sử giao dịch</Link></li>
-                  <li><Link href="/my-account"><FontAwesomeIcon icon={faSignOutAlt} /> Đăng xuất</Link></li>
+                  <li><Link href="/myaccount/personal-info"><FontAwesomeIcon icon={faUser} /> Thông tin cá nhân</Link></li>
+                  <li><Link href="/myaccount/orders"><FontAwesomeIcon icon={faReceipt} /> Lịch sử giao dịch</Link></li>
                 </ul>
               </div>
             )}

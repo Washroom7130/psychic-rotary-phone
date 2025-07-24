@@ -66,6 +66,8 @@ export default function SuKienTablePage() {
   const [selectedCancel, setSelectedCancel] = useState<any | null>(null);
   const [cancelMessage, setCancelMessage] = useState('');
   const [cancelError, setCancelError] = useState('');
+  const READONLY_STATUSES = ['Đang diễn ra', 'Đã kết thúc', 'Hủy bỏ'];
+  const [isReadOnly, setIsReadOnly] = useState(false);
 
   useEffect(() => {
     fetchData()
@@ -249,7 +251,7 @@ export default function SuKienTablePage() {
         setEditError(result.error || result.message || 'Có lỗi xảy ra!');
       }
     } catch (err) {
-      alert('Lỗi kết nối máy chủ.');
+      setEditError('Lỗi kết nối máy chủ hoặc ảnh tải quá lớn.');
     }
   };  
 
@@ -335,45 +337,34 @@ export default function SuKienTablePage() {
                 </td>
                 <td>
                 <button
-                    className="edit-btn"
-                    onClick={() => {
-                      setEditForm({
-                        maSuKien: sk.maSuKien.toString(),
-                        tenSuKien: sk.tenSuKien,
-                        moTa: '', // You should fetch and populate full details if not present
-                        diaDiem: '',
-                        phiThamGia: '',
-                        luongChoNgoi: sk.luongChoNgoi.toString(),
-                        ngayBatDau: '',
-                        ngayKetThuc: '',
-                        anhSuKien: '', // Will be fetched
-                        danhMuc: '',
-                      });
+  className="edit-btn"
+  onClick={() => {
+    fetch(`http://localhost:5555/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
+      .then((res) => res.json())
+      .then((data) => {
+        setEditForm({
+          maSuKien: data.maSuKien,
+          tenSuKien: data.tenSuKien,
+          moTa: data.moTa || '',
+          diaDiem: data.diaDiem || '',
+          phiThamGia: data.phiThamGia?.toString() || '',
+          luongChoNgoi: data.luongChoNgoi?.toString() || '',
+          ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
+          ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
+          danhMuc: data.maDanhMuc || '',
+          anhSuKien: data.anhSuKien || '',
+        });
+        setEditModalOpen(true);
+        setIsReadOnly(READONLY_STATUSES.includes(sk.trangThaiSuKien));
+      })
+      .catch(console.error);
+    setEditError('');
+    setEditMessage('');
+  }}
+>
+  {READONLY_STATUSES.includes(sk.trangThaiSuKien) ? 'Chi tiết' : 'Chỉnh sửa'}
+</button>
 
-                      fetch(`http://localhost:5555/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
-                        .then((res) => res.json())
-                        .then((data) => {
-                          setEditForm({
-                            maSuKien: data.maSuKien,
-                            tenSuKien: data.tenSuKien,
-                            moTa: data.moTa || '',
-                            diaDiem: data.diaDiem || '',
-                            phiThamGia: data.phiThamGia?.toString() || '',
-                            luongChoNgoi: data.luongChoNgoi?.toString() || '',
-                            ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
-                            ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
-                            danhMuc: data.maDanhMuc || '',
-                            anhSuKien: data.anhSuKien || '',
-                          });
-                          setEditModalOpen(true);
-                        })
-                        .catch(console.error);
-                        setEditError('');
-                        setEditMessage('');
-                    }}
-                    disabled={sk.trangThaiSuKien === 'Đang diễn ra' || sk.trangThaiSuKien === 'Đã kết thúc' || sk.trangThaiSuKien === 'Hủy bỏ'}>
-                    Chỉnh sửa
-                  </button>
 
                   <button
                     className="delete-btn"
@@ -657,6 +648,7 @@ export default function SuKienTablePage() {
                   }
                   className="modal-input"
                   rows={4}
+                  disabled={isReadOnly}
                 />
               ) : (
                 <input
@@ -672,7 +664,7 @@ export default function SuKienTablePage() {
                     setEditForm((prev) => ({ ...prev, [key]: e.target.value }))
                   }
                   className="modal-input"
-                  disabled={key === 'luongChoNgoi'}
+                  disabled={isReadOnly || key === 'luongChoNgoi'}
                 />
               )}
             </div>
@@ -687,8 +679,9 @@ export default function SuKienTablePage() {
               onChange={(e) =>
                 setEditForm((prev) => ({ ...prev, danhMuc: e.target.value }))
               }
+              disabled={isReadOnly}
             >
-              <option value="">-- Chọn danh mục --</option>
+              <option value="">{isReadOnly ? 'Sự kiện này không thuộc danh mục nào' : '-- Chọn danh mục --'}</option>
               {danhMucs.map((dm) => (
                 <option key={dm.maDanhMuc} value={dm.maDanhMuc}>
                   {dm.tenDanhMuc}
@@ -705,9 +698,11 @@ export default function SuKienTablePage() {
     {editMessage && <p style={{ color: 'green', marginTop: '8px' }}>{editMessage}</p>}
     {editError && <p style={{ color: 'red', marginTop: '8px' }}>{editError}</p>}
     <div className="modal-buttons">
-      <button className="modal-save" onClick={handleEditSubmit}>
-        Cập nhật
-      </button>
+    {!isReadOnly && (
+    <button className="modal-save" onClick={handleEditSubmit}>
+      Cập nhật
+    </button>
+  )}
       <button className="modal-cancel" onClick={() => setEditModalOpen(false)}>
         Hủy
       </button>

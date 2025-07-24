@@ -146,7 +146,7 @@ export default function OrdersPage() {
         )}
       </>
     ) : (
-      <p>Không có dữ liệu câu hỏi cho hóa đơn này</p>
+      <p>Không có dữ liệu vé cho hóa đơn này</p>
     )}
   </div>
 )}
