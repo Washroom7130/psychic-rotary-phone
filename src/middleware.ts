@@ -6,14 +6,15 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isAdminRoute = pathname.startsWith('/admin');
   const isMyAccountRoute = pathname.startsWith('/myaccount');
+  const isDangKyRoute = pathname.startsWith('/dangky')
 
-  if ((isAdminRoute || isMyAccountRoute) && !token) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if ((isAdminRoute || isMyAccountRoute || isDangKyRoute) && !token) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/myaccount/:path*'],
+  matcher: ['/admin/:path*', '/myaccount/:path*', '/dangky/:path*'],
 };

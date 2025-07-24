@@ -75,6 +75,12 @@ export default function EventBookingPage() {
     fetchSuKien();
   }, [maSuKien]);
 
+  useEffect(() => {
+    if (user && user.vaiTro !== 'KhachHang') {
+      router.push('/');
+    }
+  }, [user]);  
+
   const isSeatBooked = (index: number): boolean => {
     return suKien?.occupiedSeat?.includes(index.toString()) ?? false;
   };

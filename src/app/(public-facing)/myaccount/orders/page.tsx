@@ -13,6 +13,7 @@ interface HoaDon {
   tenKhachHang: string;
   tenSuKien: string;
   maSuKien: string;
+  maDiemDanh: string;
 }
 
 interface ApiResponse {
@@ -31,6 +32,7 @@ export default function OrdersPage() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [questions, setQuestions] = useState<Record<string, string>>({});
+  const [orderDetails, setOrderDetails] = useState<Record<string, any>>({});
 
   const fetchOrders = async (page: number) => {
     try {
@@ -65,6 +67,20 @@ export default function OrdersPage() {
     }
   };
 
+  const fetchOrderDetails = async (maDiemDanh: string, maHoaDon: string) => {
+    try {
+      const res = await fetch(`http://localhost:5555/api/diemdanh/get/${maDiemDanh}`, {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch order details');
+  
+      const data = await res.json();
+      setOrderDetails((prev) => ({ ...prev, [maHoaDon]: data }));
+    } catch (err) {
+      console.error('Failed to load ticket info:', err);
+    }
+  };
+
   useEffect(() => {
     fetchOrders(page);
   }, [page]);
@@ -72,11 +88,17 @@ export default function OrdersPage() {
   const toggleDropdown = (order: HoaDon) => {
     const isExpanding = expanded !== order.maHoaDon;
     setExpanded(isExpanding ? order.maHoaDon : null);
-
-    if (isExpanding && order.trangThaiHoaDon === 'Đã thanh toán' && !questions[order.maHoaDon]) {
-      fetchCauHoi(order.maSuKien, order.maHoaDon);
+  
+    if (isExpanding && order.trangThaiHoaDon === 'Đã thanh toán') {
+      if (!questions[order.maHoaDon]) {
+        fetchCauHoi(order.maSuKien, order.maHoaDon);
+      }
+      if (order.maDiemDanh && !orderDetails[order.maHoaDon]) {
+        fetchOrderDetails(order.maDiemDanh, order.maHoaDon);
+      }
     }
   };
+  
 
   return (
     <section className="orders-container">
@@ -108,14 +130,27 @@ export default function OrdersPage() {
             </button>
 
             {expanded === order.maHoaDon && (
-              <div className="order-details">
-                {order.trangThaiHoaDon === 'Đã thanh toán' ? (
-                  <p>{questions[order.maHoaDon] || 'Đang tải câu hỏi...'}</p>
-                ) : (
-                  <p>Không có dữ liệu câu hỏi cho hóa đơn này</p>
-                )}
-              </div>
-            )}
+  <div className="order-details">
+    {order.trangThaiHoaDon === 'Đã thanh toán' ? (
+      <>
+        <h1>Thông tin vé</h1>
+        {orderDetails[order.maHoaDon] ? (
+          <>
+            <p>Họ tên: {orderDetails[order.maHoaDon].tenKhachHang}</p>
+            <p>Ghế: {orderDetails[order.maHoaDon].viTriGheNgoi}</p>
+            <p>Ngày đặt: {new Date(orderDetails[order.maHoaDon].ngayTaoVe).toLocaleString('vi-VN')}</p>
+            {questions[order.maHoaDon] && <p>{questions[order.maHoaDon]}</p>}
+          </>
+        ) : (
+          <p>Đang tải thông tin vé...</p>
+        )}
+      </>
+    ) : (
+      <p>Không có dữ liệu câu hỏi cho hóa đơn này</p>
+    )}
+  </div>
+)}
+
           </div>
         ))}
       </div>

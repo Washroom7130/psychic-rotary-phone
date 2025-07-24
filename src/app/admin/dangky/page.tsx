@@ -30,10 +30,11 @@ export default function DangKyPage() {
   const [searchInput, setSearchInput] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const pageSize = 10;
+  const [selectedTrangThaiSuKien, setSelectedTrangThaiSuKien] = useState('');
 
   useEffect(() => {
     fetchData();
-  }, [page, searchKeyword]);  
+  }, [page, searchKeyword, selectedTrangThaiSuKien]);  
 
   const fetchData = async () => {
     try {
@@ -44,6 +45,10 @@ export default function DangKyPage() {
   
       if (searchKeyword.trim()) {
         query.append('search', searchKeyword.trim());
+      }
+  
+      if (selectedTrangThaiSuKien) {
+        query.append('trangThaiSuKien', selectedTrangThaiSuKien);
       }
   
       const res = await fetch(`http://localhost:5555/api/dangky/get/all?${query.toString()}`, {
@@ -59,7 +64,7 @@ export default function DangKyPage() {
     } catch (err) {
       console.error('Lỗi kết nối:', err);
     }
-  };
+  };  
 
   const getStatusBadge = (status: string) => {
     const base = 'badge ';
@@ -130,33 +135,51 @@ export default function DangKyPage() {
           {/* Search row */}
           <tr className="table-search-row">
             <th colSpan={6}>
-              <div className="search-wrapper">
-                <input
-                  type="text"
-                  placeholder="🔍 Tìm kiếm khách hàng hoặc sự kiện..."
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      setSearchKeyword(searchInput.trim());
-                      setPage(0);
-                    }
-                  }}
-                  className="search-input"
-                />
-                {searchKeyword && (
-                  <button
-                    onClick={() => {
-                      setSearchKeyword('');
-                      setSearchInput('');
-                      setPage(0);
-                    }}
-                    style={{ marginLeft: '8px' }}
-                  >
-                    Đặt lại
-                  </button>
-                )}
-              </div>
+            <div className="search-wrapper">
+  <input
+    type="text"
+    placeholder="🔍 Tìm kiếm khách hàng hoặc sự kiện..."
+    value={searchInput}
+    onChange={(e) => setSearchInput(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') {
+        setSearchKeyword(searchInput.trim());
+        setPage(0);
+      }
+    }}
+    className="search-input"
+  />
+  <select
+    value={selectedTrangThaiSuKien}
+    onChange={(e) => {
+      setSelectedTrangThaiSuKien(e.target.value);
+      setPage(0);
+    }}
+    className="filter-select"
+    style={{ marginLeft: '8px' }}
+  >
+    <option value="">-- Trạng thái sự kiện --</option>
+    <option value="Còn chỗ">Còn chỗ</option>
+    <option value="Hết chỗ">Hết chỗ</option>
+    <option value="Hết hạn đăng ký">Hết hạn đăng ký</option>
+    <option value="Đang diễn ra">Đang diễn ra</option>
+    <option value="Đã kết thúc">Đã kết thúc</option>
+    <option value="Hủy bỏ">Hủy bỏ</option>
+  </select>
+  {searchKeyword && (
+    <button
+      onClick={() => {
+        setSearchKeyword('');
+        setSearchInput('');
+        setPage(0);
+      }}
+      style={{ marginLeft: '8px' }}
+    >
+      Đặt lại
+    </button>
+  )}
+</div>
+
             </th>
           </tr>
 

@@ -30,19 +30,25 @@ export default function HoaDonPage() {
   const [sortAsc, setSortAsc] = useState(true);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [selectedTrangThaiHoaDon, setSelectedTrangThaiHoaDon] = useState('');
   const pageSize = 10;
 
   useEffect(() => {
     fetchData();
-  }, [page, search]);  
+  }, [page, search, selectedTrangThaiHoaDon]);  
 
   const fetchData = async () => {
     try {
       const url = new URL('http://localhost:5555/api/hoadon/get/all');
       url.searchParams.append('page', page.toString());
       url.searchParams.append('size', pageSize.toString());
+  
       if (search.trim()) {
         url.searchParams.append('search', search.trim());
+      }
+  
+      if (selectedTrangThaiHoaDon) {
+        url.searchParams.append('trangThaiSuKien', selectedTrangThaiHoaDon);
       }
   
       const res = await fetch(url.toString(), { credentials: 'include' });
@@ -55,7 +61,7 @@ export default function HoaDonPage() {
     } catch (err) {
       console.error('Lỗi kết nối:', err);
     }
-  };  
+  };   
 
   const getStatusBadge = (status: string) => {
     const base = 'badge ';
@@ -129,33 +135,52 @@ export default function HoaDonPage() {
         <thead>
         <tr className="table-search-row">
         <th colSpan={6}>
-            <div className="search-wrapper">
-            <input
-                type="text"
-                placeholder="🔍 Tìm theo tên khách hàng..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                    setSearch(searchInput.trim());
-                    setPage(0);
-                }
-                }}
-                className="search-input"
-            />
-            {search && (
-                <button
-                onClick={() => {
-                    setSearch('');
-                    setSearchInput('');
-                    setPage(0);
-                }}
-                style={{ marginLeft: '8px' }}
-                >
-                Đặt lại
-                </button>
-            )}
-            </div>
+        <div className="search-wrapper">
+  <input
+    type="text"
+    placeholder="🔍 Tìm theo tên khách hàng..."
+    value={searchInput}
+    onChange={(e) => setSearchInput(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') {
+        setSearch(searchInput.trim());
+        setPage(0);
+      }
+    }}
+    className="search-input"
+  />
+  <select
+    value={selectedTrangThaiHoaDon}
+    onChange={(e) => {
+      setSelectedTrangThaiHoaDon(e.target.value);
+      setPage(0);
+    }}
+    className="filter-select"
+    style={{ marginLeft: '8px' }}
+  >
+    <option value="">-- Trạng thái sự kiện --</option>
+    <option value="Còn chỗ">Còn chỗ</option>
+    <option value="Hết chỗ">Hết chỗ</option>
+    <option value="Hết hạn đăng ký">Hết hạn đăng ký</option>
+    <option value="Đang diễn ra">Đang diễn ra</option>
+    <option value="Đã kết thúc">Đã kết thúc</option>
+    <option value="Hủy bỏ">Hủy bỏ</option>
+  </select>
+  {(search || selectedTrangThaiHoaDon) && (
+    <button
+      onClick={() => {
+        setSearch('');
+        setSearchInput('');
+        setSelectedTrangThaiHoaDon('');
+        setPage(0);
+      }}
+      style={{ marginLeft: '8px' }}
+    >
+      Đặt lại
+    </button>
+  )}
+</div>
+
         </th>
         </tr>
 

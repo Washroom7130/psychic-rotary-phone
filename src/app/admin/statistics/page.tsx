@@ -260,18 +260,40 @@ setEventStatusChartData({
   return (
     <div className="dashboard-container">
       <div className="dashboard-filters">
-        <input
-          type="date"
-          className="dashboard-date-input"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <input
-          type="date"
-          className="dashboard-date-input"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
+      <input
+        type="date"
+        className="dashboard-date-input"
+        value={startDate}
+        onChange={(e) => {
+          const selected = new Date(e.target.value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const end = new Date(endDate);
+
+          if (selected > today || selected > end) {
+            setStartDate(defaultStartDate);
+          } else {
+            setStartDate(e.target.value);
+          }
+        }}
+      />
+      <input
+        type="date"
+        className="dashboard-date-input"
+        value={endDate}
+        onChange={(e) => {
+          const selected = new Date(e.target.value);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const start = new Date(startDate);
+
+          if (selected > today || selected < start) {
+            setEndDate(defaultEndDate);
+          } else {
+            setEndDate(e.target.value);
+          }
+        }}
+      />
       </div>
 
       {loading ? (
@@ -283,7 +305,7 @@ setEventStatusChartData({
       <div className="dashboard-stat-card">Tổng nhân viên: <span>{data.totalNhanVien}</span></div>
       <div className="dashboard-stat-card">Người đăng ký: <span>{data.totalKhachHang}</span></div>
       <div className="dashboard-stat-card">Ticket chưa phản hồi: <span>{data.totalUnAnsweredTicket}</span></div>
-      <div className="dashboard-stat-card">Doanh thu: <span>{data.totalRevenue.toLocaleString()} VNĐ</span></div>
+      <div className="dashboard-stat-card">Doanh thu: <span>{data.totalRevenue !== null ? data.totalRevenue.toLocaleString() : 0} VNĐ</span></div>
     </div>
 
     <div className="top-events-section">
@@ -330,21 +352,61 @@ setEventStatusChartData({
                       fetch(`http://localhost:5555/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
                         .then((res) => res.json())
                         .then((data) => {
-                          setEditForm({
-                            maSuKien: data.maSuKien,
-                            tenSuKien: data.tenSuKien,
-                            moTa: data.moTa || '',
-                            diaDiem: data.diaDiem || '',
-                            phiThamGia: data.phiThamGia?.toString() || '',
-                            luongChoNgoi: data.luongChoNgoi?.toString() || '',
-                            ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
-                            ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
-                            danhMuc: data.maDanhMuc || '',
-                            anhSuKien: data.anhSuKien || '',
-                          });
-                          setEditModalOpen(true);
+                          const danhMucId = data.maDanhMuc;
+                        
+                          // Fetch danh mục name if exists
+                          if (danhMucId) {
+                            fetch(`http://localhost:5555/api/danhmucsukien/get/${danhMucId}`, { credentials: 'include' })
+                              .then((res) => res.json())
+                              .then((danhMucData) => {
+                                setEditForm({
+                                  maSuKien: data.maSuKien,
+                                  tenSuKien: data.tenSuKien,
+                                  moTa: data.moTa || '',
+                                  diaDiem: data.diaDiem || '',
+                                  phiThamGia: data.phiThamGia?.toString() || '',
+                                  luongChoNgoi: data.luongChoNgoi?.toString() || '',
+                                  ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
+                                  ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
+                                  danhMuc: danhMucData.tenDanhMuc || '',
+                                  anhSuKien: data.anhSuKien || '',
+                                });
+                                setEditModalOpen(true);
+                              })
+                              .catch(() => {
+                                // Fallback if danh muc fetch fails
+                                setEditForm({
+                                  maSuKien: data.maSuKien,
+                                  tenSuKien: data.tenSuKien,
+                                  moTa: data.moTa || '',
+                                  diaDiem: data.diaDiem || '',
+                                  phiThamGia: data.phiThamGia?.toString() || '',
+                                  luongChoNgoi: data.luongChoNgoi?.toString() || '',
+                                  ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
+                                  ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
+                                  danhMuc: '',
+                                  anhSuKien: data.anhSuKien || '',
+                                });
+                                setEditModalOpen(true);
+                              });
+                          } else {
+                            // No danh muc
+                            setEditForm({
+                              maSuKien: data.maSuKien,
+                              tenSuKien: data.tenSuKien,
+                              moTa: data.moTa || '',
+                              diaDiem: data.diaDiem || '',
+                              phiThamGia: data.phiThamGia?.toString() || '',
+                              luongChoNgoi: data.luongChoNgoi?.toString() || '',
+                              ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
+                              ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
+                              danhMuc: '',
+                              anhSuKien: data.anhSuKien || '',
+                            });
+                            setEditModalOpen(true);
+                          }
                         })
-                        .catch(console.error);
+                        
                     }}
                   >
                     Chi tiết
