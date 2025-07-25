@@ -29,7 +29,7 @@ export default function Header() {
         } 
         else if (user.vaiTro === 'NhanVien' || user.vaiTro === 'QuanLy') {
             accountLink = '/admin';
-            displayText = ' Trang quản lí';
+            displayText = ' Trang quản lý';
         } 
     }
 

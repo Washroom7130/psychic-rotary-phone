@@ -56,7 +56,7 @@ export default function TicketPage() {
   
 
   const getStatusBadge = (status: string) => {
-    return status === 'Đã xử lí' ? 'badge badge-success' : 'badge badge-default';
+    return status === 'Đã xử lý' ? 'badge badge-success' : 'badge badge-default';
   };
 
   const handleTicketClick = (ticket: Ticket) => {
@@ -177,7 +177,7 @@ export default function TicketPage() {
               <td><span className={getStatusBadge(t.trangThai)}>{t.trangThai}</span></td>
               <td>
                 <button className="edit-btn" onClick={() => handleTicketClick(t)}>
-                  {t.trangThai === 'Đã xử lí' ? 'Chi tiết' : 'Trả lời'}
+                  {t.trangThai === 'Đã xử lý' ? 'Chi tiết' : 'Trả lời'}
                 </button>
               </td>
             </tr>
@@ -215,7 +215,7 @@ export default function TicketPage() {
       </div>
 
       {modalOpen && selectedTicket && (
-        <Modal onClose={() => setModalOpen(false)} isOpen={modalOpen} title={selectedTicket.trangThai === 'Đã xử lí' ? 'Chi tiết Ticket' : 'Phản hồi Ticket'}>
+        <Modal onClose={() => setModalOpen(false)} isOpen={modalOpen} title={selectedTicket.trangThai === 'Đã xử lý' ? 'Chi tiết Ticket' : 'Phản hồi Ticket'}>
           <div className="modal-details">
             <div className="form-group">
                 <label><strong>Tên khách hàng:</strong></label>
@@ -243,7 +243,7 @@ export default function TicketPage() {
             </div>
             <div className="form-group">
             <label><strong>Phản hồi:</strong></label>
-                {selectedTicket.trangThai === 'Đã xử lí' ? (
+                {selectedTicket.trangThai === 'Đã xử lý' ? (
                 <textarea value={DOMPurify.sanitize(selectedTicket.noiDungGiaiDap) || 'N/A'} disabled className="modal-input" rows={4} />
                 ) : (
                 <textarea
@@ -259,7 +259,7 @@ export default function TicketPage() {
           </div>
 
           <div className="modal-buttons">
-            {selectedTicket.trangThai !== 'Đã xử lí' && (
+            {selectedTicket.trangThai !== 'Đã xử lý' && (
               <button
                 className="modal-save"
                 onClick={handleSubmitAnswer}
