@@ -242,8 +242,14 @@ export default function DanhGiaPage() {
         </div>
       </div>
       {detailModalOpen && (
-        <div className="modal-overlay">
-            <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Chi tiết đánh giá</h2>
 
             {loadingDetail ? (
@@ -280,8 +286,14 @@ export default function DanhGiaPage() {
       )}
 
       {deleteModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Xác nhận xóa</h2>
             <p><strong>{DOMPurify.sanitize('Bạn có chắc chắn muốn xóa đánh giá này không?')}</strong></p>
 

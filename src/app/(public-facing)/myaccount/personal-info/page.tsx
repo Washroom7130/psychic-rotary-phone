@@ -4,7 +4,7 @@ import { useUser } from "@/context/UserContext";
 import { FormEvent, useEffect, useState } from "react";
 import Modal from "@/components/Modal"; // adjust path if needed
 import { useRouter } from "next/navigation";
-
+import DOMPurify from 'dompurify';
 
 export default function PersonalDataPage() {
     const { user, setUser, refreshUser } = useUser();
@@ -140,7 +140,7 @@ export default function PersonalDataPage() {
                 type="text"
                 id="register-name"
                 name="hoTen"
-                value={formData.hoTen}
+                value={DOMPurify.sanitize(formData.hoTen)}
                 onChange={handleInputChange}
                 required
                 />
@@ -190,7 +190,7 @@ export default function PersonalDataPage() {
                 type="email"
                 id="register-email"
                 name="email"
-                value={formData.email}
+                value={DOMPurify.sanitize(formData.email)}
                 onChange={handleInputChange}
                 required
                 />
@@ -214,7 +214,7 @@ export default function PersonalDataPage() {
                 type="text"
                 id="register-address"
                 name="diaChi"
-                value={formData.diaChi}
+                value={DOMPurify.sanitize(formData.diaChi)}
                 onChange={handleInputChange}
                 required
                 />

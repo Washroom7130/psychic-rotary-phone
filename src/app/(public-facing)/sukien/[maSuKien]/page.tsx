@@ -6,6 +6,7 @@ import '@/public/css/style.css';
 import '@/public/css/event-detail.css';
 import { useUser } from '@/context/UserContext';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 
 interface SuKien {
   maSuKien: number;
@@ -143,11 +144,10 @@ export default function EventDetailPage() {
       setIsSubmitting(false);
     }
   };  
-// `http://localhost:5555/api/sukien/get${event.anhSuKien}`
   return (
     <main>
       <div className="event-detail-container">
-        <a href="/" className="back-link">← Quay lại</a>
+        <Link href="/sukien" className="back-link">← Quay lại</Link>
 
         <div className="event-detail-wrapper">
           <div className="event-image">
@@ -156,10 +156,10 @@ export default function EventDetailPage() {
               `http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
           </div>
           <div className="event-info">
-            <h1 id="event-title">{event.tenSuKien}</h1>
+            <h1 id="event-title">{DOMPurify.sanitize(event.tenSuKien)}</h1>
             <p><strong>Bắt đầu:</strong> <span id="event-start">{formatDate(event.ngayBatDau)}</span></p>
             <p><strong>Kết thúc:</strong> <span id="event-end">{formatDate(event.ngayKetThuc)}</span></p>
-            <p><strong>Địa điểm:</strong> <span id="event-location">{event.diaDiem}</span></p>
+            <p><strong>Địa điểm:</strong> <span id="event-location">{DOMPurify.sanitize(event.diaDiem)}</span></p>
             <p><strong>Giá vé:</strong> <span id="event-price">{formatCurrency(event.phiThamGia)}</span></p>
             <p><strong>Mô tả:</strong></p>
             <p id="event-description">{event.moTa}</p>
@@ -233,8 +233,8 @@ export default function EventDetailPage() {
               ) : (
                 reviews.map((r) => (
                   <div key={r.maDanhGia} className="review-item">
-                    <p><strong>{r.tenKhachHang}</strong> - {r.loaiDanhGia} ⭐</p>
-                    <p>{r.binhLuan}</p>
+                    <p><strong>{DOMPurify.sanitize(r.tenKhachHang)}</strong> - {r.loaiDanhGia} ⭐</p>
+                    <p>{DOMPurify.sanitize(r.binhLuan)}</p>
                   </div>
                 ))
               )}

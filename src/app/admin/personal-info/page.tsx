@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
+import DOMPurify from 'dompurify';
 import { useUser } from '@/context/UserContext';
 
 export default function AdminPersonalInfoPage() {
@@ -94,7 +95,7 @@ export default function AdminPersonalInfoPage() {
         <input
           type="text"
           name="hoTen"
-          value={formData.hoTen}
+          value={DOMPurify.sanitize(formData.hoTen)}
           onChange={handleInputChange}
           placeholder="Họ tên"
           required
@@ -103,7 +104,7 @@ export default function AdminPersonalInfoPage() {
         <input
           type="text"
           name="diaChi"
-          value={formData.diaChi}
+          value={DOMPurify.sanitize(formData.diaChi)}
           onChange={handleInputChange}
           placeholder="Địa chỉ"
           required
@@ -112,7 +113,7 @@ export default function AdminPersonalInfoPage() {
         <input
           type="email"
           name="email"
-          value={formData.email}
+          value={DOMPurify.sanitize(formData.email)}
           onChange={handleInputChange}
           placeholder="Email"
           required

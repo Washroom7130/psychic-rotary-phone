@@ -10,7 +10,7 @@ import Modal from '@/components/Modal';
 interface CauHoi {
   maCauHoi: number;
   noiDungCauHoi: string;
-  noiDungTraLoi: string | null;
+  noiDungTraLoi: string;
   trangThai: string;
   tenKhachHang: string;
   tenSuKien: string;
@@ -210,11 +210,11 @@ export default function CauHoiPage() {
           <div className="modal-details">
             <div className="form-group">
               <label><strong>Tên khách hàng:</strong></label>
-              <input value={selectedCauHoi.tenKhachHang} disabled className="modal-input" />
+              <input value={DOMPurify.sanitize(selectedCauHoi.tenKhachHang)} disabled className="modal-input" />
             </div>
             <div className="form-group">
               <label><strong>Nội dung câu hỏi:</strong></label>
-              <textarea value={selectedCauHoi.noiDungCauHoi} disabled className="modal-input" rows={4} />
+              <textarea value={DOMPurify.sanitize(selectedCauHoi.noiDungCauHoi)} disabled className="modal-input" rows={4} />
             </div>
             <div className="form-group">
               <label><strong>Trạng thái:</strong></label>
@@ -223,13 +223,13 @@ export default function CauHoiPage() {
             {selectedCauHoi.tenNhanVien && (
               <div className="form-group">
                 <label><strong>Nhân viên phụ trách:</strong></label>
-                <input value={selectedCauHoi.tenNhanVien} disabled className="modal-input" />
+                <input value={DOMPurify.sanitize(selectedCauHoi.tenNhanVien)} disabled className="modal-input" />
               </div>
             )}
             <div className="form-group">
               <label><strong>Phản hồi:</strong></label>
               {selectedCauHoi.trangThai === 'Đã xử lý' ? (
-                <textarea value={selectedCauHoi.noiDungTraLoi || 'N/A'} disabled className="modal-input" rows={4} />
+                <textarea value={DOMPurify.sanitize(selectedCauHoi.noiDungTraLoi) || 'N/A'} disabled className="modal-input" rows={4} />
               ) : (
                 <textarea
                   value={answer}

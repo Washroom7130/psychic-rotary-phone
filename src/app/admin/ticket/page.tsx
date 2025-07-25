@@ -11,7 +11,7 @@ interface Ticket {
   tenKhachHang: string;
   email: string;
   noiDung: string;
-  noiDungGiaiDap: string | null;
+  noiDungGiaiDap: string;
   trangThai: string;
   tenNhanVien: string;
 }
@@ -219,32 +219,32 @@ export default function TicketPage() {
           <div className="modal-details">
             <div className="form-group">
                 <label><strong>Tên khách hàng:</strong></label>
-                <input value={selectedTicket.tenKhachHang} disabled className="modal-input" />
+                <input value={DOMPurify.sanitize(selectedTicket.tenKhachHang)} disabled className="modal-input" />
             </div>
             <div className="form-group">
                 <label><strong>Email:</strong></label>
-                <input value={selectedTicket.email} disabled className="modal-input" />
+                <input value={DOMPurify.sanitize(selectedTicket.email)} disabled className="modal-input" />
             </div>
             <div className="form-group">
                 <label><strong>Nội dung yêu cầu:</strong></label>
-                <textarea value={selectedTicket.noiDung} disabled className="modal-input" rows={4} />
+                <textarea value={DOMPurify.sanitize(selectedTicket.noiDung)} disabled className="modal-input" rows={4} />
             </div>
             <div className="form-group">
                 <label><strong>Trạng thái:</strong></label>
                 <input value={selectedTicket.trangThai} disabled className="modal-input" />
             </div>
             <div className="form-group">
-                {selectedTicket.tenNhanVien && (
+                {DOMPurify.sanitize(selectedTicket.tenNhanVien) && (
                 <>
                     <label><strong>Nhân viên phụ trách:</strong></label>
-                    <input value={selectedTicket.tenNhanVien} disabled className="modal-input" />
+                    <input value={DOMPurify.sanitize(selectedTicket.tenNhanVien)} disabled className="modal-input" />
                 </>
                 )}
             </div>
             <div className="form-group">
             <label><strong>Phản hồi:</strong></label>
                 {selectedTicket.trangThai === 'Đã xử lí' ? (
-                <textarea value={selectedTicket.noiDungGiaiDap || 'N/A'} disabled className="modal-input" rows={4} />
+                <textarea value={DOMPurify.sanitize(selectedTicket.noiDungGiaiDap) || 'N/A'} disabled className="modal-input" rows={4} />
                 ) : (
                 <textarea
                     value={answer}

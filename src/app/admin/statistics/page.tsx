@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import '@/public/admin_css/dashboard.css';
 import '@/public/admin_css/style.css';
 import '@/public/admin_css/danhmuc.css';
@@ -330,8 +331,8 @@ setEventStatusChartData({
             data.top3MostRegistered.map((sk: any, index: number) => (
               <tr key={sk.maSuKien} className={index % 2 === 0 ? 'even' : 'odd'}>
                 <td>{index + 1}</td>
-                <td>{sk.tenSuKien}</td>
-                <td>{sk.soLuongDangKy}</td>
+                <td>{DOMPurify.sanitize(sk.tenSuKien)}</td>
+                <td>{DOMPurify.sanitize(sk.soLuongDangKy)}</td>
                 <td>
                   <button
                     className="edit-btn"
@@ -360,15 +361,15 @@ setEventStatusChartData({
                               .then((res) => res.json())
                               .then((danhMucData) => {
                                 setEditForm({
-                                  maSuKien: data.maSuKien,
-                                  tenSuKien: data.tenSuKien,
-                                  moTa: data.moTa || '',
-                                  diaDiem: data.diaDiem || '',
+                                  maSuKien: DOMPurify.sanitize(data.maSuKien),
+                                  tenSuKien: DOMPurify.sanitize(data.tenSuKien),
+                                  moTa: DOMPurify.sanitize(data.moTa) || '',
+                                  diaDiem: DOMPurify.sanitize(data.diaDiem) || '',
                                   phiThamGia: data.phiThamGia?.toString() || '',
                                   luongChoNgoi: data.luongChoNgoi?.toString() || '',
                                   ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
                                   ngayKetThuc: data.ngayKetThuc?.slice(0, 19) || '',
-                                  danhMuc: danhMucData.tenDanhMuc || '',
+                                  danhMuc: DOMPurify.sanitize(danhMucData.tenDanhMuc) || '',
                                   anhSuKien: data.anhSuKien || '',
                                 });
                                 setEditModalOpen(true);
@@ -376,10 +377,10 @@ setEventStatusChartData({
                               .catch(() => {
                                 // Fallback if danh muc fetch fails
                                 setEditForm({
-                                  maSuKien: data.maSuKien,
-                                  tenSuKien: data.tenSuKien,
-                                  moTa: data.moTa || '',
-                                  diaDiem: data.diaDiem || '',
+                                  maSuKien: DOMPurify.sanitize(data.maSuKien),
+                                  tenSuKien: DOMPurify.sanitize(data.tenSuKien),
+                                  moTa: DOMPurify.sanitize(data.moTa) || '',
+                                  diaDiem: DOMPurify.sanitize(data.diaDiem) || '',
                                   phiThamGia: data.phiThamGia?.toString() || '',
                                   luongChoNgoi: data.luongChoNgoi?.toString() || '',
                                   ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
@@ -392,10 +393,10 @@ setEventStatusChartData({
                           } else {
                             // No danh muc
                             setEditForm({
-                              maSuKien: data.maSuKien,
-                              tenSuKien: data.tenSuKien,
-                              moTa: data.moTa || '',
-                              diaDiem: data.diaDiem || '',
+                              maSuKien: DOMPurify.sanitize(data.maSuKien),
+                              tenSuKien: DOMPurify.sanitize(data.tenSuKien),
+                              moTa: DOMPurify.sanitize(data.moTa) || '',
+                              diaDiem: DOMPurify.sanitize(data.diaDiem) || '',
                               phiThamGia: data.phiThamGia?.toString() || '',
                               luongChoNgoi: data.luongChoNgoi?.toString() || '',
                               ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
@@ -427,7 +428,7 @@ setEventStatusChartData({
             <ul id="ratingEventsList">
             {(selectedGroup === 'good' ? data.ratingStats.top3SuKienTot : selectedGroup === 'bad' ? data.ratingStats.top3SuKienTe : []).map((event: any, idx: number) => (
                 <li key={idx} className="event-card" style={{ marginBottom: '12px', padding: '12px', background: '#f9f9f9', borderRadius: '8px' }}>
-                <span className="event-name" style={{ fontWeight: 'bold' }}>{event.tenSuKien}</span>
+                <span className="event-name" style={{ fontWeight: 'bold' }}>{DOMPurify.sanitize(event.tenSuKien)}</span>
                 <span className="event-rating" style={{ float: 'right', color: '#888' }}>{event.avg} ★</span>
                 </li>
             ))}

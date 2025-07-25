@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import '@/public/admin_css/style.css';
 import '@/public/admin_css/danhmuc.css';
-import Modal from '@/components/Modal';
 
 interface KhachHang {
   tenDangNhap: string;
@@ -208,8 +207,14 @@ export default function KhachHangPage() {
       </div>
 
       {detailModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Chi tiết khách hàng</h2>
             {loadingDetail ? (
               <p>Đang tải...</p>
@@ -238,8 +243,14 @@ export default function KhachHangPage() {
       )}
 
       {statusModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Xác nhận thay đổi trạng thái</h2>
             <p>
               Bạn có chắc chắn muốn{' '}

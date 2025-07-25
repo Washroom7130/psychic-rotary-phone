@@ -7,6 +7,7 @@ import { Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 
 interface Event {
   maSuKien: number;
@@ -235,9 +236,9 @@ export default function HomePage() {
                   <i className="fas fa-calendar-check"></i> Kết thúc: {formatDate(event.ngayKetThuc)}
                 </span>
               </div>
-              <h3 className="event-title">{event.tenSuKien}</h3>
+              <h3 className="event-title">{DOMPurify.sanitize(event.tenSuKien)}</h3>
               <p className="event-location">
-                <i className="fas fa-map-marker-alt"></i> {event.diaDiem}
+                <i className="fas fa-map-marker-alt"></i> {DOMPurify.sanitize(event.diaDiem)}
               </p>
               <div className="event-footer">
                 <span className="event-price">{event.phiThamGia.toLocaleString()}₫</span>

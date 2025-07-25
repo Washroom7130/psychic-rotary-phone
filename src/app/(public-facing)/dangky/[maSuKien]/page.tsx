@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-
+import DOMPurify from 'dompurify';
 import '@/public/css/style.css';
 import '@/public/css/register-event.css';
 import { useUser } from '@/context/UserContext';
@@ -172,10 +172,10 @@ export default function EventBookingPage() {
 
         <div className="event-info">
           <div className="event-details">
-            <h2 id="event-title">{suKien.tenSuKien}</h2>
+            <h2 id="event-title">{DOMPurify.sanitize(suKien.tenSuKien)}</h2>
             <p><strong>Bắt đầu:</strong> <span id="event-start">{formatDate(suKien.ngayBatDau)}</span></p>
             <p><strong>Kết thúc:</strong> <span id="event-end">{formatDate(suKien.ngayKetThuc)}</span></p>
-            <p><strong>Địa điểm:</strong> <span id="event-location">{suKien.diaDiem}</span></p>
+            <p><strong>Địa điểm:</strong> <span id="event-location">{DOMPurify.sanitize(suKien.diaDiem)}</span></p>
             <p><strong>Giá vé:</strong> <span id="event-price">{suKien.phiThamGia} VND</span></p>
           </div>
         </div>

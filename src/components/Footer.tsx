@@ -26,6 +26,7 @@ import {
 } from "@/lib/icons";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
+import DOMPurify from 'dompurify';
 
 interface DanhMuc {
   maDanhMuc: number;
@@ -68,7 +69,7 @@ export default function Footer() {
               <div id="footer-categories" className="footer-categories">
                 {categories ? (
                   categories.map((cat) => (
-                    <Link key={cat.maDanhMuc} href={`/sukien?maDanhMuc=${cat.maDanhMuc}`}>{cat.tenDanhMuc}</Link>
+                    <Link key={cat.maDanhMuc} href={`/sukien?maDanhMuc=${cat.maDanhMuc}`}>{DOMPurify.sanitize(cat.tenDanhMuc)}</Link>
                   ))
                 ) : (
                    <div className="loading">Đang tải danh mục...</div>

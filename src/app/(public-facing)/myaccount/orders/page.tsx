@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import '@/public/css/style.css';
 import '@/public/css/order.css';
+import DOMPurify from 'dompurify';
 
 interface HoaDon {
   maHoaDon: string;
@@ -58,7 +59,7 @@ export default function OrdersPage() {
       }
 
       const data: CauHoiResponse = await res.json();
-      setQuestions((prev) => ({ ...prev, [maHoaDon]: 'Câu hỏi đã đặt: ' + data.noiDungCauHoi }));
+      setQuestions((prev) => ({ ...prev, [maHoaDon]: DOMPurify.sanitize(data.noiDungCauHoi) }));
     } catch (err) {
       setQuestions((prev) => ({
         ...prev,
@@ -112,7 +113,7 @@ export default function OrdersPage() {
               onClick={() => toggleDropdown(order)}
             >
               <div className="order-summary">
-                <div className="order-title">{order.tenSuKien}</div>
+                <div className="order-title">{DOMPurify.sanitize(order.tenSuKien)}</div>
                 <div className="order-info">
                   Tổng tiền: {order.tongTien.toLocaleString()} VND
                 </div>
@@ -136,10 +137,10 @@ export default function OrdersPage() {
         <h1>Thông tin vé</h1>
         {orderDetails[order.maHoaDon] ? (
           <>
-            <p>Họ tên: {orderDetails[order.maHoaDon].tenKhachHang}</p>
-            <p>Ghế: {orderDetails[order.maHoaDon].viTriGheNgoi}</p>
-            <p>Ngày đặt: {new Date(orderDetails[order.maHoaDon].ngayTaoVe).toLocaleString('vi-VN')}</p>
-            {questions[order.maHoaDon] && <p>{questions[order.maHoaDon]}</p>}
+            <strong>Họ tên: </strong>  {DOMPurify.sanitize(orderDetails[order.maHoaDon].tenKhachHang)}<br/>
+            <strong>Ghế: </strong>  {DOMPurify.sanitize(orderDetails[order.maHoaDon].viTriGheNgoi)}<br/>
+            <strong>Ngày đặt: </strong> {new Date(orderDetails[order.maHoaDon].ngayTaoVe).toLocaleString('vi-VN')}<br/>
+            <strong>Câu hỏi đã đặt: </strong>{questions[order.maHoaDon] && questions[order.maHoaDon]}
           </>
         ) : (
           <p>Đang tải thông tin vé...</p>

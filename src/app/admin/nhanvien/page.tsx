@@ -285,8 +285,14 @@ export default function NhanVienPage() {
         </div>
       </div>
       {detailModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Chi tiết nhân viên</h2>
 
             {loadingDetail ? (
@@ -315,8 +321,14 @@ export default function NhanVienPage() {
         </div>
       )}
       {statusModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content fade-in">
+        <div
+        className="modal-overlay"
+        onClick={() => setDetailModalOpen(false)}
+      >
+        <div
+          className="modal-content fade-in"
+          onClick={(e) => e.stopPropagation()}
+        >
             <h2>Xác nhận thay đổi trạng thái</h2>
             <p>
               Bạn có chắc chắn muốn{' '}

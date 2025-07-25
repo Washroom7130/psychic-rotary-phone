@@ -343,10 +343,10 @@ export default function SuKienTablePage() {
       .then((res) => res.json())
       .then((data) => {
         setEditForm({
-          maSuKien: data.maSuKien,
-          tenSuKien: data.tenSuKien,
-          moTa: data.moTa || '',
-          diaDiem: data.diaDiem || '',
+          maSuKien: DOMPurify.sanitize(data.maSuKien),
+          tenSuKien: DOMPurify.sanitize(data.tenSuKien),
+          moTa: DOMPurify.sanitize(data.moTa) || '',
+          diaDiem: DOMPurify.sanitize(data.diaDiem) || '',
           phiThamGia: data.phiThamGia?.toString() || '',
           luongChoNgoi: data.luongChoNgoi?.toString() || '',
           ngayBatDau: data.ngayBatDau?.slice(0, 19) || '',
@@ -521,8 +521,8 @@ export default function SuKienTablePage() {
             >
               <option value="">-- Chọn danh mục --</option>
               {danhMucs.map((dm) => (
-                <option key={dm.maDanhMuc} value={dm.maDanhMuc}>
-                  {dm.tenDanhMuc}
+                <option key={dm.maDanhMuc} value={DOMPurify.sanitize(dm.maDanhMuc)}>
+                  {DOMPurify.sanitize(dm.tenDanhMuc)}
                 </option>
               ))}
             </select>
@@ -683,8 +683,8 @@ export default function SuKienTablePage() {
             >
               <option value="">{isReadOnly ? 'Sự kiện này không thuộc danh mục nào' : '-- Chọn danh mục --'}</option>
               {danhMucs.map((dm) => (
-                <option key={dm.maDanhMuc} value={dm.maDanhMuc}>
-                  {dm.tenDanhMuc}
+                <option key={dm.maDanhMuc} value={DOMPurify.sanitize(dm.maDanhMuc)}>
+                  {DOMPurify.sanitize(dm.tenDanhMuc)}
                 </option>
               ))}
             </select>

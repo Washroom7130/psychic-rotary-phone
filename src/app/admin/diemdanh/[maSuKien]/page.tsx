@@ -5,7 +5,7 @@ import DOMPurify from 'dompurify';
 import '@/public/admin_css/style.css';
 import '@/public/admin_css/danhmuc.css';
 import Modal from '@/components/Modal';
-import { useRouter } from 'next/navigation';
+import { use } from 'react';
 
 interface DiemDanhEntry {
   maDiemDanh: number;
@@ -16,7 +16,8 @@ interface DiemDanhEntry {
   tenKhachHang: string;
 }
 
-export default function DiemDanhChiTietPage({ params }: { params: { maSuKien: string } }) {
+export default function DiemDanhChiTietPage({ params }: { params: Promise<{ maSuKien: string }> }) {
+  const { maSuKien } = use(params);
   const [entries, setEntries] = useState<DiemDanhEntry[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
@@ -46,7 +47,7 @@ export default function DiemDanhChiTietPage({ params }: { params: { maSuKien: st
       });
       if (search.trim()) query.append('search', search.trim());
 
-      const res = await fetch(`http://localhost:5555/api/diemdanh/get/all/${params.maSuKien}?${query.toString()}`, {
+      const res = await fetch(`http://localhost:5555/api/diemdanh/get/all/${maSuKien}?${query.toString()}`, {
         credentials: 'include'
       });
 
