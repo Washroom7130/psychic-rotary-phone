@@ -74,7 +74,7 @@ export default function SuKienTablePage() {
   }, [page, search])  
 
   const fetchData = async () => {
-    const url = new URL('http://localhost:5555/api/sukien/get/all')
+    const url = new URL('/api/sukien/get/all')
     url.searchParams.set('page', page.toString())
     url.searchParams.set('size', pageSize.toString())
     if (search) url.searchParams.set('search', search)
@@ -137,7 +137,7 @@ export default function SuKienTablePage() {
 
   useEffect(() => {
     if (addModalOpen || editModalOpen) {
-      fetch('http://localhost:5555/api/danhmucsukien/get/all?size=100', {
+      fetch('/api/danhmucsukien/get/all?size=100', {
         credentials: 'include',
       })
         .then((res) => res.json())
@@ -171,7 +171,7 @@ export default function SuKienTablePage() {
         formData.append('anhSuKien', addForm.anhSuKien); // should be a File
       }
   
-      const res = await fetch('http://localhost:5555/api/sukien/add', {
+      const res = await fetch('/api/sukien/add', {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -235,7 +235,7 @@ export default function SuKienTablePage() {
     if (editImage) formData.append('anhSuKien', editImage);
   
     try {
-      const res = await fetch(`http://localhost:5555/api/sukien/update/${editForm.maSuKien}`, {
+      const res = await fetch(`/api/sukien/update/${editForm.maSuKien}`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -339,7 +339,7 @@ export default function SuKienTablePage() {
                 <button
   className="edit-btn"
   onClick={() => {
-    fetch(`http://localhost:5555/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
+    fetch(`/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
       .then((res) => res.json())
       .then((data) => {
         setEditForm({
@@ -610,7 +610,7 @@ export default function SuKienTablePage() {
               />
             ) : editForm.anhSuKien ? (
               <img
-                src={`http://localhost:5555/api/sukien/get${editForm.anhSuKien}`}
+                src={`/api/sukien/get${editForm.anhSuKien}`}
                 alt="Hiện tại"
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
               />
@@ -723,7 +723,7 @@ export default function SuKienTablePage() {
           className="modal-save"
           onClick={async () => {
             try {
-              const res = await fetch(`http://localhost:5555/api/sukien/cancel/${selectedCancel.maSuKien}`, {
+              const res = await fetch(`/api/sukien/cancel/${selectedCancel.maSuKien}`, {
                 method: 'PUT',
                 credentials: 'include',
               });

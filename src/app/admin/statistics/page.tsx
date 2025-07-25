@@ -158,7 +158,7 @@ const ratingChartData = data?.ratingStats
       const endDateISO = `${endDate}T00:00:00`;
   
       const res = await fetch(
-        `http://localhost:5555/api/admin/statistics?startDate=${startDateISO}&endDate=${endDateISO}`,
+        `/api/admin/statistics?startDate=${startDateISO}&endDate=${endDateISO}`,
         {
           credentials: 'include',
         }
@@ -350,14 +350,14 @@ setEventStatusChartData({
                         danhMuc: '',
                       });
 
-                      fetch(`http://localhost:5555/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
+                      fetch(`/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
                         .then((res) => res.json())
                         .then((data) => {
                           const danhMucId = data.maDanhMuc;
                         
                           // Fetch danh mục name if exists
                           if (danhMucId) {
-                            fetch(`http://localhost:5555/api/danhmucsukien/get/${danhMucId}`, { credentials: 'include' })
+                            fetch(`/api/danhmucsukien/get/${danhMucId}`, { credentials: 'include' })
                               .then((res) => res.json())
                               .then((danhMucData) => {
                                 setEditForm({
@@ -512,7 +512,7 @@ setEventStatusChartData({
                   >
                     {editForm.anhSuKien ? (
                       <img
-                        src={`http://localhost:5555/api/sukien/get${editForm.anhSuKien}`}
+                        src={`/api/sukien/get${editForm.anhSuKien}`}
                         alt="Hiện tại"
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />

@@ -34,7 +34,7 @@ export default function LoginPage() {
     const password = (form.querySelector("#login-password") as HTMLInputElement).value;
 
     try {
-      const res = await fetch("http://localhost:5555/api/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export default function LoginPage() {
     const age = (form.querySelector("#register-age") as HTMLInputElement).value;
 
     try {
-        const res = await fetch("http://localhost:5555/api/auth/register", {
+        const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

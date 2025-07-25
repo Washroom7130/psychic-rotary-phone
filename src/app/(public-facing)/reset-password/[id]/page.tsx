@@ -38,7 +38,7 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const res = await fetch(`http://localhost:5555/api/auth/reset_password/${id}`, {
+        const res = await fetch(`/api/auth/reset_password/${id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -66,7 +66,7 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5555/api/auth/reset_password/${id}`, {
+      const res = await fetch(`/api/auth/reset_password/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

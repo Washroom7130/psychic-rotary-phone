@@ -39,7 +39,7 @@ export default function Footer() {
     const [categories, setCategories] = useState<DanhMuc[]>([]);
 
     useEffect(() => {
-      fetch('http://localhost:5555/api/danhmucsukien/get/all?size=5', {
+      fetch('/api/danhmucsukien/get/all?size=5', {
         credentials: 'include',
       })
         .then(res => res.json())

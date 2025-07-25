@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
     
         const verifyEmail = async () => {
             try {
-                const res = await fetch(`http://localhost:5555/api/auth/verify/${id}`);
+                const res = await fetch(`/api/auth/verify/${id}`);
                 if (res.ok) {
                     const data = await res.json(); 
                 setMessage(data.message || 'Xác minh email thành công!');

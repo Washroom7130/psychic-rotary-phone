@@ -11,7 +11,6 @@ export function middleware(request: NextRequest) {
   // Use Web Crypto API for nonce
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64'); // still safe for nonce
   const cspHeader = `
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
     object-src 'none';
     base-uri 'self';
     form-action 'self';

@@ -74,7 +74,7 @@ export default function PersonalDataPage() {
         }
 
         try {
-        const res = await fetch("http://localhost:5555/api/taikhoan/update/me", {
+        const res = await fetch("/api/taikhoan/update/me", {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",
@@ -99,7 +99,7 @@ export default function PersonalDataPage() {
 
     const handleLogout = async () => {
         try {
-          await fetch("http://localhost:5555/api/auth/logout", {
+          await fetch("/api/auth/logout", {
             method: "POST",
             credentials: "include",
           });
@@ -112,7 +112,7 @@ export default function PersonalDataPage() {
       
       const handleDeactivate = async () => {
         try {
-          const res = await fetch("http://localhost:5555/api/taikhoan/deactivate", {
+          const res = await fetch("/api/taikhoan/deactivate", {
             method: "POST",
             credentials: "include",
           });

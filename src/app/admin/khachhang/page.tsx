@@ -44,7 +44,7 @@ export default function KhachHangPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:5555/api/admin/khachhang/get/all?page=${page}&size=${pageSize}&search=${encodeURIComponent(search)}`, {
+      const res = await fetch(`/api/admin/khachhang/get/all?page=${page}&size=${pageSize}&search=${encodeURIComponent(search)}`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -82,7 +82,7 @@ export default function KhachHangPage() {
     setDetailError('');
 
     try {
-      const res = await fetch(`http://localhost:5555/api/admin/khachhang/get/${maId}`, {
+      const res = await fetch(`/api/admin/khachhang/get/${maId}`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -272,7 +272,7 @@ export default function KhachHangPage() {
                       : `/api/taikhoan/activate/${selectedIdForStatusChange}`;
 
                   try {
-                    const res = await fetch(`http://localhost:5555${endpoint}`, {
+                    const res = await fetch(`${endpoint}`, {
                       method: 'POST',
                       credentials: 'include',
                     });

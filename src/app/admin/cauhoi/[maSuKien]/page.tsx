@@ -42,7 +42,7 @@ export default function CauHoiPage() {
   const fetchData = async () => {
     try {
       const query = `page=${page}&size=${pageSize}&maSuKien=${maSuKien}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
-      const res = await fetch(`http://localhost:5555/api/cauhoi/get/all?${query}`, {
+      const res = await fetch(`/api/cauhoi/get/all?${query}`, {
         credentials: 'include'
       });
       if (res.ok) {
@@ -75,7 +75,7 @@ export default function CauHoiPage() {
     setSubmitSuccess('');
 
     try {
-      const res = await fetch(`http://localhost:5555/api/cauhoi/answer/${selectedCauHoi.maCauHoi}`, {
+      const res = await fetch(`/api/cauhoi/answer/${selectedCauHoi.maCauHoi}`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

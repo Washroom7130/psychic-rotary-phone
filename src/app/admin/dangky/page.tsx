@@ -51,7 +51,7 @@ export default function DangKyPage() {
         query.append('trangThaiSuKien', selectedTrangThaiSuKien);
       }
   
-      const res = await fetch(`http://localhost:5555/api/dangky/get/all?${query.toString()}`, {
+      const res = await fetch(`/api/dangky/get/all?${query.toString()}`, {
         credentials: 'include',
       });
   
@@ -90,7 +90,7 @@ export default function DangKyPage() {
     setDetailError('');
   
     try {
-      const res = await fetch(`http://localhost:5555/api/dangky/get/${maDangKy}`, {
+      const res = await fetch(`/api/dangky/get/${maDangKy}`, {
         credentials: 'include'
       });
       const data = await res.json();

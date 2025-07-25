@@ -33,7 +33,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshUser = async () => {
     try {
-      const res = await fetch("http://localhost:5555/api/taikhoan/me", {
+      const res = await fetch("/api/taikhoan/me", {
         credentials: "include",
       });
       if (res.ok) {

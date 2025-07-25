@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import '@/public/css/index.css';
 import '@/public/css/style.css';
@@ -29,7 +29,7 @@ interface Event {
   rating: number;
 }
 
-export default function SukienPage() {
+function SuKienPageContent() {
   const [categories, setCategories] = useState<DanhMuc[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [page, setPage] = useState(0);
@@ -45,7 +45,7 @@ export default function SukienPage() {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5555/api/danhmucsukien/get/all?size=100', {
+    fetch('/api/danhmucsukien/get/all?size=100', {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -77,7 +77,7 @@ export default function SukienPage() {
         if (costEndParam) params.set("costEnd", costEndParam);
 
         const res = await fetch(
-          `http://localhost:5555/api/sukien/get/all?${params.toString()}`,
+          `/api/sukien/get/all?${params.toString()}`,
           { credentials: "include" }
         );
 
@@ -203,7 +203,7 @@ export default function SukienPage() {
       <div className="event-image">
         <img id="event-img" src={event.anhSuKien === null ? 
               'https://cdn5.vectorstock.com/i/1000x1000/74/69/upcoming-events-neon-sign-on-brick-wall-background-vector-37057469.jpg' : 
-              `http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
+              `/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
       </div>
       <div className="event-info">
         <div className="event-meta">
@@ -252,5 +252,13 @@ export default function SukienPage() {
       </section>
       
     </main>
+  );
+}
+
+export default function SukienPage() {
+  return (
+    <Suspense fallback={<div>Đang tải...</div>}>
+      <SuKienPageContent />
+    </Suspense>
   );
 }

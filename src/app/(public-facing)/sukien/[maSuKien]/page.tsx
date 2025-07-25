@@ -47,7 +47,7 @@ export default function EventDetailPage() {
   useEffect(() => {
     if (!maSuKien) return;
 
-    fetch(`http://localhost:5555/api/sukien/get/${maSuKien}`, {
+    fetch(`/api/sukien/get/${maSuKien}`, {
       credentials: 'include',
     })
       .then((res) => res.json())
@@ -64,7 +64,7 @@ export default function EventDetailPage() {
   useEffect(() => {
     if (!maSuKien || !isAfterEvent) return;
 
-    fetch(`http://localhost:5555/api/danhgia/sukien/${maSuKien}/get/all`, {
+    fetch(`/api/danhgia/sukien/${maSuKien}/get/all`, {
       credentials: 'include',
     })
       .then((res) => res.json())
@@ -106,7 +106,7 @@ export default function EventDetailPage() {
     setIsSubmitting(true);
   
     try {
-      const res = await fetch(`http://localhost:5555/api/danhgia/${event.maSuKien}/add`, {
+      const res = await fetch(`/api/danhgia/${event.maSuKien}/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export default function EventDetailPage() {
           <div className="event-image">
             <img id="event-img" src={event.anhSuKien === null ? 
               'https://cdn5.vectorstock.com/i/1000x1000/74/69/upcoming-events-neon-sign-on-brick-wall-background-vector-37057469.jpg' : 
-              `http://localhost:5555/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
+              `/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
           </div>
           <div className="event-info">
             <h1 id="event-title">{DOMPurify.sanitize(event.tenSuKien)}</h1>

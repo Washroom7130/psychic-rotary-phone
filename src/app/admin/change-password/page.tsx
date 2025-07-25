@@ -75,7 +75,7 @@ export default function AdminChangePasswordPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5555/api/taikhoan/changepassword', {
+      const res = await fetch('/api/taikhoan/changepassword', {
         method: 'PUT',
         credentials: 'include',
         headers: {

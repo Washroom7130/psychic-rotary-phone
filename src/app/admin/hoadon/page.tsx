@@ -39,7 +39,7 @@ export default function HoaDonPage() {
 
   const fetchData = async () => {
     try {
-      const url = new URL('http://localhost:5555/api/hoadon/get/all');
+      const url = new URL('/api/hoadon/get/all');
       url.searchParams.append('page', page.toString());
       url.searchParams.append('size', pageSize.toString());
   
@@ -85,7 +85,7 @@ export default function HoaDonPage() {
     setDetailError('');
   
     try {
-      const res = await fetch(`http://localhost:5555/api/hoadon/get/${maHoaDon}`, {
+      const res = await fetch(`/api/hoadon/get/${maHoaDon}`, {
         credentials: 'include'
       });
   

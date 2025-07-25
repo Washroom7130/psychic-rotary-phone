@@ -19,10 +19,6 @@ export default function RootLayout({
         {/* External CDN links for icons */}
         <link
           rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-        />
-        <link
-          rel="stylesheet"
           href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
         />
         <link
