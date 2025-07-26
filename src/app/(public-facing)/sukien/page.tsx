@@ -45,7 +45,7 @@ function SuKienPageContent() {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    fetch('/api/danhmucsukien/get/all?size=100', {
+    fetch('http://localhost:10000/api/danhmucsukien/get/all?size=100', {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -77,7 +77,7 @@ function SuKienPageContent() {
         if (costEndParam) params.set("costEnd", costEndParam);
 
         const res = await fetch(
-          `/api/sukien/get/all?${params.toString()}`,
+          `http://localhost:10000/api/sukien/get/all?${params.toString()}`,
           { credentials: "include" }
         );
 
@@ -203,7 +203,7 @@ function SuKienPageContent() {
       <div className="event-image">
         <img id="event-img" src={event.anhSuKien === null ? 
               'https://cdn5.vectorstock.com/i/1000x1000/74/69/upcoming-events-neon-sign-on-brick-wall-background-vector-37057469.jpg' : 
-              `/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
+              `http://localhost:10000/api/sukien/get${event.anhSuKien}`} alt="Ảnh sự kiện" />
       </div>
       <div className="event-info">
         <div className="event-meta">

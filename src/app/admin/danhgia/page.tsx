@@ -31,7 +31,7 @@ export default function DanhGiaPage() {
 
   const fetchData = async () => {
     try {
-      const url = new URL('/api/danhgia/get/all');
+      const url = new URL('http://localhost:10000/api/danhgia/get/all');
       url.searchParams.append('page', page.toString());
       url.searchParams.append('size', pageSize.toString());
       if (search) {
@@ -60,7 +60,7 @@ export default function DanhGiaPage() {
     setDetailError('');
   
     try {
-      const res = await fetch(`/api/danhgia/get/${maDanhGia}`, {
+      const res = await fetch(`http://localhost:10000/api/danhgia/get/${maDanhGia}`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -83,7 +83,7 @@ export default function DanhGiaPage() {
     setDeleteError('');
   
     try {
-      const res = await fetch(`/api/danhgia/delete/${deleteId}`, {
+      const res = await fetch(`http://localhost:10000/api/danhgia/delete/${deleteId}`, {
         method: 'DELETE',
         credentials: 'include'
       });

@@ -14,7 +14,7 @@ export default function CancelDangKyPage() {
   useEffect(() => {
     const cancelDangKy = async () => {
       try {
-        const res = await fetch(`/api/sukien/dangky/${token}/cancel`, {
+        const res = await fetch(`http://localhost:10000/api/sukien/dangky/${token}/cancel`, {
           credentials: 'include',
         });
 

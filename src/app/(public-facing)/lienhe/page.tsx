@@ -27,7 +27,7 @@ export default function LienHePage() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('/api/ticket/create', {
+      const res = await fetch('http://localhost:10000/api/ticket/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

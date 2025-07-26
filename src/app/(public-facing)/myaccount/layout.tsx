@@ -32,7 +32,7 @@ function MyAccountContent({ children }: { children: React.ReactNode }) {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch('http://localhost:10000/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
       });

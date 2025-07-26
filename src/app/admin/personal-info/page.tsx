@@ -65,7 +65,7 @@ export default function AdminPersonalInfoPage() {
         }
 
         try {
-        const res = await fetch("/api/taikhoan/update/me", {
+        const res = await fetch("http://localhost:10000/api/taikhoan/update/me", {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",

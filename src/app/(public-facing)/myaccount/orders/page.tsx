@@ -37,7 +37,7 @@ export default function OrdersPage() {
 
   const fetchOrders = async (page: number) => {
     try {
-      const res = await fetch(`/api/hoadon/get/all?page=${page}&size=5`, {
+      const res = await fetch(`http://localhost:10000/api/hoadon/get/all?page=${page}&size=5`, {
         credentials: 'include',
       });
       const data: ApiResponse = await res.json();
@@ -50,7 +50,7 @@ export default function OrdersPage() {
 
   const fetchCauHoi = async (maSuKien: string, maHoaDon: string) => {
     try {
-      const res = await fetch(`/api/cauhoi/get/sukien/${maSuKien}`, {
+      const res = await fetch(`http://localhost:10000/api/cauhoi/get/sukien/${maSuKien}`, {
         credentials: 'include',
       });
 
@@ -70,7 +70,7 @@ export default function OrdersPage() {
 
   const fetchOrderDetails = async (maDiemDanh: string, maHoaDon: string) => {
     try {
-      const res = await fetch(`/api/diemdanh/get/${maDiemDanh}`, {
+      const res = await fetch(`http://localhost:10000/api/diemdanh/get/${maDiemDanh}`, {
         credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to fetch order details');

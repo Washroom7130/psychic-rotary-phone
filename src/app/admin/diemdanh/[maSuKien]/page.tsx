@@ -47,7 +47,7 @@ export default function DiemDanhChiTietPage({ params }: { params: Promise<{ maSu
       });
       if (search.trim()) query.append('search', search.trim());
 
-      const res = await fetch(`/api/diemdanh/get/all/${maSuKien}?${query.toString()}`, {
+      const res = await fetch(`http://localhost:10000/api/diemdanh/get/all/${maSuKien}?${query.toString()}`, {
         credentials: 'include'
       });
 
@@ -81,7 +81,7 @@ export default function DiemDanhChiTietPage({ params }: { params: Promise<{ maSu
     setMarkingMessage('');
     setLoadingDetail(true);
     try {
-      const res = await fetch(`/api/diemdanh/get/${maDiemDanh}`, {
+      const res = await fetch(`http://localhost:10000/api/diemdanh/get/${maDiemDanh}`, {
         credentials: 'include',
       });
       const data = await res.json();
@@ -102,7 +102,7 @@ export default function DiemDanhChiTietPage({ params }: { params: Promise<{ maSu
     setIsMarking(true);
     setMarkingError('');
     try {
-      const res = await fetch(`/api/diemdanh/${selectedDiemDanh.maDiemDanh}`, {
+      const res = await fetch(`http://localhost:10000/api/diemdanh/${selectedDiemDanh.maDiemDanh}`, {
         method: 'POST',
         credentials: 'include',
       });

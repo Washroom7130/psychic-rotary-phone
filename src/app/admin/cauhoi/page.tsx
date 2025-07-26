@@ -36,7 +36,7 @@ export default function CauHoiPage() {
       });
       if (search.trim()) query.append('search', search.trim());
 
-      const res = await fetch(`/api/sukien/get/all?${query.toString()}`);
+      const res = await fetch(`http://localhost:10000/api/sukien/get/all?${query.toString()}`);
       if (res.ok) {
         const data = await res.json();
         const sorted = [...data.content].sort((a: SuKien, b: SuKien) => {

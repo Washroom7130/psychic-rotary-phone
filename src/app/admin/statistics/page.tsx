@@ -51,6 +51,8 @@ export default function AdminStatisticsPage() {
   const [revenueChartData, setRevenueChartData] = useState<any | null>(null);
   const [activityChartData, setActivityChartData] = useState<any | null>(null);
   const [eventStatusChartData, setEventStatusChartData] = useState<any | null>(null);
+  const [startDateChanged, setStartDateChanged] = useState(false);
+  const [endDateChanged, setEndDateChanged] = useState(false);
 
 const ratingChartData = data?.ratingStats
   ? {
@@ -154,11 +156,20 @@ const ratingChartData = data?.ratingStats
   const fetchData = async () => {
     setLoading(true);
     try {
-      const startDateISO = `${startDate}T00:00:00`;
-      const endDateISO = `${endDate}T00:00:00`;
+      const now = new Date();
+      const currentTime = now.toTimeString().split(' ')[0]; // 'HH:MM:SS'
+
+      const params = new URLSearchParams();
+
+      if (startDateChanged) {
+        params.append('startDate', `${startDate}T${currentTime}`);
+      }
+      if (endDateChanged) {
+        params.append('endDate', `${endDate}T${currentTime}`);
+      }
   
       const res = await fetch(
-        `/api/admin/statistics?startDate=${startDateISO}&endDate=${endDateISO}`,
+        `http://localhost:10000/api/admin/statistics?startDate=${params.toString()}`,
         {
           credentials: 'include',
         }
@@ -262,39 +273,43 @@ setEventStatusChartData({
     <div className="dashboard-container">
       <div className="dashboard-filters">
       <input
-        type="date"
-        className="dashboard-date-input"
-        value={startDate}
-        onChange={(e) => {
-          const selected = new Date(e.target.value);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const end = new Date(endDate);
+  type="date"
+  className="dashboard-date-input"
+  value={startDate}
+  onChange={(e) => {
+    const selected = new Date(e.target.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
 
-          if (selected > today || selected > end) {
-            setStartDate(defaultStartDate);
-          } else {
-            setStartDate(e.target.value);
-          }
-        }}
-      />
-      <input
-        type="date"
-        className="dashboard-date-input"
-        value={endDate}
-        onChange={(e) => {
-          const selected = new Date(e.target.value);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const start = new Date(startDate);
+    if (selected > today || selected > end) {
+      setStartDate(defaultStartDate);
+      setStartDateChanged(false);
+    } else {
+      setStartDate(e.target.value);
+      setStartDateChanged(true);
+    }
+  }}
+/>
+<input
+  type="date"
+  className="dashboard-date-input"
+  value={endDate}
+  onChange={(e) => {
+    const selected = new Date(e.target.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate);
 
-          if (selected > today || selected < start) {
-            setEndDate(defaultEndDate);
-          } else {
-            setEndDate(e.target.value);
-          }
-        }}
-      />
+    if (selected > today || selected < start) {
+      setEndDate(defaultEndDate);
+      setEndDateChanged(false);
+    } else {
+      setEndDate(e.target.value);
+      setEndDateChanged(true);
+    }
+  }}
+/>
       </div>
 
       {loading ? (
@@ -350,14 +365,14 @@ setEventStatusChartData({
                         danhMuc: '',
                       });
 
-                      fetch(`/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
+                      fetch(`http://localhost:10000/api/sukien/get/${sk.maSuKien}`, { credentials: 'include' })
                         .then((res) => res.json())
                         .then((data) => {
                           const danhMucId = data.maDanhMuc;
                         
                           // Fetch danh mục name if exists
                           if (danhMucId) {
-                            fetch(`/api/danhmucsukien/get/${danhMucId}`, { credentials: 'include' })
+                            fetch(`http://localhost:10000/api/danhmucsukien/get/${danhMucId}`, { credentials: 'include' })
                               .then((res) => res.json())
                               .then((danhMucData) => {
                                 setEditForm({
@@ -512,7 +527,7 @@ setEventStatusChartData({
                   >
                     {editForm.anhSuKien ? (
                       <img
-                        src={`/api/sukien/get${editForm.anhSuKien}`}
+                        src={`http://localhost:10000/api/sukien/get${editForm.anhSuKien}`}
                         alt="Hiện tại"
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />

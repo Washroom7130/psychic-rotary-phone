@@ -40,7 +40,7 @@ export default function TicketPage() {
   const fetchData = async () => {
     try {
       const query = `page=${page}&size=${pageSize}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
-      const res = await fetch(`/api/ticket/get/all?${query}`, {
+      const res = await fetch(`http://localhost:10000/api/ticket/get/all?${query}`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -74,7 +74,7 @@ export default function TicketPage() {
     setSubmitSuccess('');
 
     try {
-      const res = await fetch(`/api/ticket/${selectedTicket.maHoTro}/answer`, {
+      const res = await fetch(`http://localhost:10000/api/ticket/${selectedTicket.maHoTro}/answer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

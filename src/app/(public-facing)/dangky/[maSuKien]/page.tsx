@@ -35,7 +35,7 @@ export default function EventBookingPage() {
   useEffect(() => {
     const fetchSuKien = async () => {
       try {
-        const res = await fetch(`/api/sukien/get/${maSuKien}`, {
+        const res = await fetch(`http://localhost:10000/api/sukien/get/${maSuKien}`, {
           credentials: 'include',
         });
         if (!res.ok) throw new Error('Fetch error');
@@ -110,7 +110,7 @@ export default function EventBookingPage() {
     setBookingError(null);
 
     try {
-      const response = await fetch(`/api/sukien/dangky/${maSuKien}`, {
+      const response = await fetch(`http://localhost:10000/api/sukien/dangky/${maSuKien}`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

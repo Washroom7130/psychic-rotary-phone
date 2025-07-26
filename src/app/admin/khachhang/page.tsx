@@ -44,7 +44,7 @@ export default function KhachHangPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`/api/admin/khachhang/get/all?page=${page}&size=${pageSize}&search=${encodeURIComponent(search)}`, {
+      const res = await fetch(`http://localhost:10000/api/admin/khachhang/get/all?page=${page}&size=${pageSize}&search=${encodeURIComponent(search)}`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -72,7 +72,7 @@ export default function KhachHangPage() {
 
   const getStatusBadge = (status: string) => {
     const base = 'badge ';
-    return status === 'Hoạt Động' ? base + 'badge-success' : base + 'badge-cancelled';
+    return status === 'Hoạt động' ? base + 'badge-success' : base + 'badge-cancelled';
   };
 
   const handleDetailClick = async (maId: number) => {
@@ -82,7 +82,7 @@ export default function KhachHangPage() {
     setDetailError('');
 
     try {
-      const res = await fetch(`/api/admin/khachhang/get/${maId}`, {
+      const res = await fetch(`http://localhost:10000/api/admin/khachhang/get/${maId}`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -268,8 +268,8 @@ export default function KhachHangPage() {
 
                   const endpoint =
                     selectedStatus === 'Hoạt Động'
-                      ? `/api/taikhoan/deactivate/${selectedIdForStatusChange}`
-                      : `/api/taikhoan/activate/${selectedIdForStatusChange}`;
+                      ? `http://localhost:10000/api/taikhoan/deactivate/${selectedIdForStatusChange}`
+                      : `http://localhost:10000/api/taikhoan/activate/${selectedIdForStatusChange}`;
 
                   try {
                     const res = await fetch(`${endpoint}`, {

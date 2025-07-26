@@ -45,7 +45,7 @@ export default function DanhMucPage() {
       });
       if (search.trim()) query.append('search', search.trim());
 
-      const res = await fetch(`/api/danhmucsukien/get/all?${query.toString()}`);
+      const res = await fetch(`http://localhost:10000/api/danhmucsukien/get/all?${query.toString()}`);
       if (res.ok) {
         const data = await res.json();
         const sortedData = [...data.content].sort((a: DanhMuc, b: DanhMuc) =>
@@ -69,7 +69,7 @@ export default function DanhMucPage() {
     }
 
     try {
-      const res = await fetch('/api/danhmucsukien/add', {
+      const res = await fetch('http://localhost:10000/api/danhmucsukien/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tenDanhMuc: newDanhMuc }),
@@ -123,7 +123,7 @@ export default function DanhMucPage() {
     }
 
     try {
-      const res = await fetch(`/api/danhmucsukien/update/${editId}`, {
+      const res = await fetch(`http://localhost:10000/api/danhmucsukien/update/${editId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -158,7 +158,7 @@ export default function DanhMucPage() {
     if (!deleteId) return;
   
     try {
-      const res = await fetch(`/api/danhmucsukien/delete/${deleteId}`, {
+      const res = await fetch(`http://localhost:10000/api/danhmucsukien/delete/${deleteId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
