@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import ChatBot from '@/components/ChatBot';
 
 export default function ThanhCongDangKyPage() {
   const [message, setMessage] = useState('');
@@ -177,6 +178,7 @@ export default function ThanhCongDangKyPage() {
           background-color: #005dc1;
         }
       `}</style>
+      <ChatBot />
     </div>
   );
 }

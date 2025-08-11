@@ -1,4 +1,3 @@
-import ChatBot from "@/components/ChatBot";
 import Footer from "@/components/Footer";
 //import "./globals.css";
 import Header from '@/components/Header';
@@ -32,7 +31,6 @@ export default function RootLayout({
           <div className="page-wrapper">
             <Header />
               <main className="main-content-global">{children}</main>
-              <ChatBot />
             <Footer />
           </div>
         </UserProvider>

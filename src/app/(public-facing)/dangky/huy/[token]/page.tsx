@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import ChatBot from '@/components/ChatBot';
 
 export default function CancelDangKyPage() {
   const [message, setMessage] = useState('');
@@ -96,6 +97,7 @@ export default function CancelDangKyPage() {
           background-color: #005dc1;
         }
       `}</style>
+      <ChatBot />
     </div>
   );
 }

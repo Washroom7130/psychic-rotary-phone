@@ -3,6 +3,7 @@
 import '@/public/css/style.css';
 import '@/public/css/about1.css';
 import Link from 'next/link';
+import ChatBot from '@/components/ChatBot';
 
 export default function AboutPage() {
     return (
@@ -205,6 +206,7 @@ export default function AboutPage() {
       </Link>
     </div>
   </section>
+  <ChatBot />
 </>
 
     );

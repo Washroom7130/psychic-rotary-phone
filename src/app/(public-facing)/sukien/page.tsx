@@ -8,6 +8,7 @@ import '@/public/css/account.css';
 import '@/public/css/event.css';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DOMPurify from 'dompurify';
+import ChatBot from '@/components/ChatBot';
 
 interface DanhMuc {
   maDanhMuc: number;
@@ -250,7 +251,7 @@ function SuKienPageContent() {
     </button>
   </div>
       </section>
-      
+      <ChatBot />
     </main>
   );
 }

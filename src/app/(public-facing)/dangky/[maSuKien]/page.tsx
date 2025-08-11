@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 import '@/public/css/style.css';
 import '@/public/css/register-event.css';
 import { useUser } from '@/context/UserContext';
+import ChatBot from '@/components/ChatBot';
 
 interface SuKien {
   maSuKien: number;
@@ -232,6 +233,7 @@ export default function EventBookingPage() {
           </button>
         </div>
       </div>
+      <ChatBot />
     </main>
   );
 }

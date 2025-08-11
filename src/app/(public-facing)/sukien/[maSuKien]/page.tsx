@@ -7,6 +7,7 @@ import '@/public/css/event-detail.css';
 import { useUser } from '@/context/UserContext';
 import Link from 'next/link';
 import DOMPurify from 'dompurify';
+import ChatBot from '@/components/ChatBot';
 
 interface SuKien {
   maSuKien: number;
@@ -242,6 +243,7 @@ export default function EventDetailPage() {
           </div>
         )}
       </div>
+      <ChatBot />
     </main>
   );
 }

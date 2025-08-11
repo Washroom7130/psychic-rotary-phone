@@ -3,6 +3,7 @@
 import '@/public/css/style.css';
 import '@/public/css/contact.css';
 import { useState } from 'react';
+import ChatBot from '@/components/ChatBot';
 
 export default function LienHePage() {
   const [name, setName] = useState('');
@@ -187,6 +188,7 @@ export default function LienHePage() {
           </div>
         </div>
       </div>
+      <ChatBot />
     </main>
   );
 }

@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 import Link from 'next/link';
 import DOMPurify from 'dompurify';
+import ChatBot from '@/components/ChatBot';
 
 interface Event {
   maSuKien: number;
@@ -293,6 +294,7 @@ export default function HomePage() {
         </div>
       </div>
     </div>
+    <ChatBot />
     </>
   );
 }

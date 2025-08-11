@@ -87,7 +87,7 @@ export default function Header() {
                     </form>
                 </div>
                 <div className="account">
-                    <Link className="nostyle" href={accountLink} id="user-icon"><i className="fas fa-user"></i> {displayText}</Link>
+                    <a className="nostyle" href={accountLink} id="user-icon"><i className="fas fa-user"></i> {displayText}</a>
                 </div>
                 {user && (
                     <div className="account" onClick={handleLogout} style={{ cursor: 'pointer' }}>
